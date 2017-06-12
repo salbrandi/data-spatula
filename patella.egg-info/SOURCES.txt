@@ -1,7 +1,0 @@
-htmlparser.py
-patella.egg-info/PKG-INFO
-patella.egg-info/SOURCES.txt
-patella.egg-info/dependency_links.txt
-patella.egg-info/entry_points.txt
-patella.egg-info/requires.txt
-patella.egg-info/top_level.txt
