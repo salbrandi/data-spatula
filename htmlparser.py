@@ -26,7 +26,7 @@ def find_download_links(url, filetype, output_name):
         no_tags = link.get('href')
         if no_tags != None:
             print(str(no_tags))
-            if filetype in str(no_tags):
+            if filetype == str(no_tags)[-4:]:
                 urllib.request.urlretrieve(no_tags, output_name + filetype)
                 print("file downloaded succesfully as " + output_name + filetype)
                 error = "None"
