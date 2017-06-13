@@ -61,7 +61,6 @@ dist
 # sphinx files #
 ################
 docs/_build/
-
 data_files
 
 # Test documents #
@@ -75,3 +74,7 @@ readme.html
 #######################
 venv
 patenv
+
+# other #
+#########
+patella/debug

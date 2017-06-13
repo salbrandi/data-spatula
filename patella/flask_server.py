@@ -5,21 +5,18 @@ import matplotlib.pyplot as plt
 import os, sys
 from flask import *
 
+'''
 
-yr = 2017  # need to check type of this
-path = 'C:/users/power/Desktop/Forest Service Data' # The Directory of the file needed, later change to current path os.getcwd()
-file = path + '/tabula-' + str(yr) + '.tsv' # name of the files '''
+---NO DEVELOPMENT AS OF NOW---
+
+    ---NOT IMPLEMENTED---
+
+      ---NEVER USED---
+
+'''
+
+
 app = Flask(__name__)
-
-
-def read_tsv(file_path):  # Read the .tsv into the Dataframe
-    data = pd.read_table(file_path) # Read the data out of the .tsv and store it in data
-    return data # Return the Dataframe
-
-
-
-
-fl = read_tsv(file, yr) # Call the function
 
 @app.route("/tables")
 def show_tables():

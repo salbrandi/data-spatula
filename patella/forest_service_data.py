@@ -22,8 +22,8 @@ def set_df_names(df, names):
     df.columns(names)
 
 
- fl = read_tsv(file, yr) # Call the function
- set_df_names(fl, col_names)
+fl = read_tsv(file, yr) # Call the function
+set_df_names(fl, col_names)
 
 def get_df_column(arg):  # Getter for entire columns of the Dataframe
     return fl.iloc[arg, :]
@@ -39,7 +39,7 @@ def get_df_cell(col, row):  # Getter for cells of the Dataframe
  print(fl) # Print the Dataframe
  print(fl.info());
 '''
-fl.plot(x= 'Categories', y= yr, kind= 'bar')  # Plot the Dataframe
+fl.plot(x='Categories', y=yr, kind='bar')  # Plot the Dataframe
 plt.gcf().subplots_adjust(bottom=0.5)
 plt.ylabel('Thousands of Dollars (USD)')
 plt.show()

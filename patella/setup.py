@@ -7,9 +7,7 @@ setup(
     install_requires=['Click', 'pandas', 'flask'],
     entry_points='''
         [console_scripts]
-        test=click_commands:testme
         patella=click_commands:patella
-        scrape=click_commands:scrape_url
         ''',
 
 )
