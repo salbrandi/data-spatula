@@ -19,13 +19,10 @@ class fileo():
 file1 = fileo()
 file2 = fileo()
 file1.df = file2.df = 0
+file1.path = file2.path = ''
+file1.name = file2.name = ''
 ''''''
-'''
-file1_df1 = file2_df = pandas.Dataframe
-file1 = file2 = ''
-file1_path = file2_path = ''
-ftype = '.csv'
-'''
+
 ''' TO DO
 Check for invalid file type (also check if it's a string)
 '''
@@ -49,33 +46,27 @@ def scrape_url(url, filetype, filename):
 @click.argument('file_two')
 @click.option('--delimiters', default=',:,', help='Specify file type delimiters in format <DELIM>:<DELIM2>')
 def load_data(file_one, file_two, delimiters):
-    global file1_path
-    global file2_path
-    file1_path = os.getcwd() + '/' + file_one
-    file2_path = os.getcwd() + '/' + file_two
-    print(file1_path + ', ' + file2_path)
-    if os.path.exists(file1_path) and os.path.exists(file2_path):
-        global file1
-        global file2
-        file1 = file_one
-        file2 = file_two
+    file1.path = os.getcwd() + '/' + file_one
+    file2.path = os.getcwd() + '/' + file_two
+    print(file1.path + ', ' + file2.path)
+    if os.path.exists(file1.path) and os.path.exists(file2.path):
+        file1.name = file_one
+        file2.name = file_two
         list_delims = delimiters.split(':')
         if len(list_delims) == 2:
-            global file1_df
-            global file2_df
-            file1_df = pd.read_table(file1_path, list_delims[0])
-            file2_df = pd.read_table(file2_path, list_delims[1])
-            click.echo(file1 + ' table: ' + str(file1_df))
-            click.echo(file2 + ' table: ' + str(file2_df))
+            file1.df = pd.read_table(file1.path, list_delims[0])
+            file2.df = pd.read_table(file2.path, list_delims[1])
+            click.echo(file1 + ' table: ' + str(file1.df))
+            click.echo(file2 + ' table: ' + str(file2.df))
             click.echo('files successfully loaded into Dataframes')
         elif len(list_delims) < 2:
             click.echo('too few arguments in list: delimiters')
         elif len(list_delims) > 2:
             click.echo('too many arguments in list: delimiters')
     else:
-        if not os.path.exists(file1_path):
+        if not os.path.exists(file1.path):
             click.echo('no files found with the name ' + file_one)
-        if not os.path.exists(file2_path):
+        if not os.path.exists(file2.path):
             click.echo('no files found with the name ' + file_two)
 
 

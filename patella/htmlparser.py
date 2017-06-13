@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Html parsing and datafram utility'''
+'''Html parsing and dataframe utility'''
 
 ''' \/ Third-Party Imports \/ '''
 # import matplotlib.pyplot as plt
@@ -14,12 +14,13 @@ import logging
 # Add problem you are trying to solve in DocString
 
 
-''' TO DO
-Check for invalid file type (also check if it's a string)
-check for invalid url
-check for existing files
-If multiple, list and let the user choose - fig 1
-add http:// at the beggining if missing]
+''' TO DO, ! = importance
+!! Check for invalid file type (also check if it's a string) [ ]
+!! check for invalid url [ ]
+!! check for existing files [ ]
+!!! If multiple hrefs, list and let the user choose - fig 1 [ ]
+!!! add http:// at the beggining if missing [*]
+! be more flexible with format [ ]
 '''
 
 '''fig 1
@@ -58,8 +59,9 @@ def find_download_links(url, filetype, output_name):
                     error = 'No file found for that extension (' + filetype + ')'
     return error
 
-def compare(dataframe, file2, moments):
-    return
+def compare(df1, df2, moments):
+
+    pass
 
 
 ''' useless besides not having to import pandas into other files
