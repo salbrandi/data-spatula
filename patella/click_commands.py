@@ -56,18 +56,18 @@ def load_data(file_one, file_two, delimiters):
         if len(list_delims) == 2:
             file1.df = pd.read_table(file1.path, list_delims[0])
             file2.df = pd.read_table(file2.path, list_delims[1])
-            click.echo(file1 + ' table: ' + str(file1.df))
-            click.echo(file2 + ' table: ' + str(file2.df))
+            click.echo(file1.name + ' table: ' + str(file1.df))
+            click.echo(file2.name + ' table: ' + str(file2.df))
             click.echo('files successfully loaded into Dataframes')
         elif len(list_delims) < 2:
-            click.echo('too few arguments in list: delimiters')
+            click.echo('too few arguments in list for option: --delimiters')
         elif len(list_delims) > 2:
-            click.echo('too many arguments in list: delimiters')
+            click.echo('too many arguments in list for option: --delimiters')
     else:
         if not os.path.exists(file1.path):
-            click.echo('no files found with the name ' + file_one)
+            click.echo('no files found with the name ' + file_one + ' in path ' + file1.path)
         if not os.path.exists(file2.path):
-            click.echo('no files found with the name ' + file_two)
+            click.echo('no files found with the name ' + file_two + ' in path ' + file1.path)
 
 
 
