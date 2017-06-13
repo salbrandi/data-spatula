@@ -64,7 +64,9 @@ docs/_build/
 data_files
 
 # Test documents #
+##################
 test.*
+testfile.*
 
 # docutils #
 ############
