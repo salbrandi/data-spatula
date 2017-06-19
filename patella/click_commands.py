@@ -25,6 +25,7 @@ file1.name = file2.name = ''
 
 ''' TO DO
 Check for invalid file type (also check if it's a string)
+Make function for setting both data frames at once - improves readability.
 '''
 
 
