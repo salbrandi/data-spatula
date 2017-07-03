@@ -27,6 +27,9 @@ import logging
         matches = [x for x in self.list_commands(ctx)
                    if x.startswith(cmd_name)]
 '''
+
+
+
 logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)
 
 def find_download_links(url, filetype, output_name):
@@ -44,11 +47,12 @@ def find_download_links(url, filetype, output_name):
     else:
         r = urllib.request.urlopen(url)
         soup = BeautifulSoup(r, "html.parser")
+        ext_length = len(filetype)
         for link in soup.find_all('a', string=True): #look through the link tags as strings
             no_tags = link.get('href')
             if no_tags != None: # Null check
                 logging.info(str(no_tags))
-                if filetype == str(no_tags)[-4:]: # Check the three letter file extension
+                if filetype == str(no_tags)[-ext_length:]: # Check the three letter file extension
                     if 'http://' not in no_tags: # If no first part of the url, add it
                         no_tags = domain + no_tags
                     urllib.request.urlretrieve(no_tags, dl_name + filetype)
@@ -60,8 +64,12 @@ def find_download_links(url, filetype, output_name):
     return error
 
 def compare(df1, df2, moments):
+    if df.get_df_column(df1, 0) == df.get_df_column(df2, 0):
+        pd.set_index
 
     pass
+
+
 
 
 ''' useless besides not having to import pandas into other files
@@ -73,15 +81,18 @@ def read_tsv(file_path, delim):  # Read the .tsv into the Dataframe
 def set_df_names(df, names):
     df.columns(names)
 
+
 def set_index(df, index):  # Sets a new index and drops that column
     df.set_index(index, drop=true)
 
-def get_df_column(arg):  # Getter for entire columns of the Dataframe
-    return fl.iloc[arg, :]
 
-def get_df_row(arg):  # Getter for entire rows of the Dataframe
-    return fl.iloc[: , arg]
+def get_df_column(df, arg):  # Getter for entire columns of the Dataframe
+    return df.iloc[arg, :]
 
 
-def get_df_cell(col, row):  # Getter for cells of the Dataframe
-    return fl.iloc(col, row)
+def get_df_row(df, arg):  # Getter for entire rows of the Dataframe
+    return df.iloc[: , arg]
+
+
+def get_df_cell(df, col, row):  # Getter for cells of the Dataframe
+    return df.iloc(col, row)

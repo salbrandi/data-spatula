@@ -1,5 +1,7 @@
 Patella, a webservice resource providing easy collection and comparison of data scraped from urls
 
+Made to make mass data aggregation and comparison easy and efficient so users can spend less time visualising and more time understanding
+
 
 File structure
 
