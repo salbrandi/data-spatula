@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 from urllib.parse import urlparse
 import logging
+import dateparser
 
 # Add problem you are trying to solve in DocString
 
@@ -65,7 +66,16 @@ def find_download_links(url, filetype, output_name):
 
 def compare(df1, df2, moments):
     if df.get_df_column(df1, 0) == df.get_df_column(df2, 0):
-        pd.set_index
+        # merge dataframes at the date column
+    else
+        # Iterate through the rows of the index column and dateparse the dates,
+        # then merge
+
+    # take this resulting data fram and use its data to calculate moments
+    pass
+
+def plot(df):
+
 
     pass
 
