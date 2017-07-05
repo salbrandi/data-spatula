@@ -91,10 +91,11 @@ def change_names(file, column_names):
 
 
 @click.command()
-@click.argument('title')
+@click.argument('dataframe')
 @click.option('--x_title', default=' ', help='specify the X axis title')
 @click.option('--y_title', default=' ', help='specify the Y axis title')
-def plot():
+def plot(dataframe, x_title, y_title):
+    htmlparser.plot(dataframe)
     pass
 
 

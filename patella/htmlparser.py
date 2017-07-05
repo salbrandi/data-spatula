@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 from urllib.parse import urlparse
 import logging
-import dateparser
+# import dateparser
 
 # Add problem you are trying to solve in DocString
 
@@ -20,7 +20,7 @@ import dateparser
 !! check for invalid url [ ]
 !! check for existing files [ ]
 !!! If multiple hrefs, list and let the user choose - fig 1 [ ]
-!!! add http:// at the beggining if missing [*]
+!!! add http:// at the beginning if missing [*]
 ! be more flexible with format [ ]
 '''
 
@@ -28,8 +28,15 @@ import dateparser
         matches = [x for x in self.list_commands(ctx)
                    if x.startswith(cmd_name)]
 '''
-
-
+fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
+fe_table = pd.read_html(fe_url, match='Vice-President', flavor='bs4', header=0, index_col=0)
+for idx, item in enumerate(get_df_column(fe_table, 0)):
+    fe_name = ''
+    # fe_name_list = []
+    for char in item:
+        if char != '(':
+            fe_name = fe_name + char
+    fe_table.setcell(fe_name, 0, idx) # find the actual command please
 
 logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)
 
@@ -42,41 +49,57 @@ def find_download_links(url, filetype, output_name):
         dl_name = output_name[:len(output_name)-4] # Can include file extension or none
     if url[-4:] == filetype:    # Before anything, check if the url entered IS a dl link
         urllib.request.urlretrieve(url, dl_name + filetype)
-        print("file downloaded succesfully as " + dl_name)
-        error = "None"
+        print('file downloaded succesfully as ' + dl_name)
+        error = 'None'
         return
     else:
         r = urllib.request.urlopen(url)
-        soup = BeautifulSoup(r, "html.parser")
+        soup = BeautifulSoup(r, 'html.parser')
         ext_length = len(filetype)
+        link_list = []
         for link in soup.find_all('a', string=True): #look through the link tags as strings
             no_tags = link.get('href')
-            if no_tags != None: # Null check
-                logging.info(str(no_tags))
-                if filetype == str(no_tags)[-ext_length:]: # Check the three letter file extension
-                    if 'http://' not in no_tags: # If no first part of the url, add it
-                        no_tags = domain + no_tags
+            logging.info(str(no_tags))
+            if filetype == str(no_tags)[-ext_length:]: # Check the three letter file extension
+                if 'http://' not in no_tags: # If no first part of the url, add it
+                    no_tags = domain + no_tagslink_list.append(no_tags)
+                link_list.append(no_tags)
+        if no_tags != None: # Null check
+            if len(link_list=1):
                     urllib.request.urlretrieve(no_tags, dl_name + filetype)
-                    print("file downloaded succesfully as " + dl_name)
-                    error = "None"
-                    break
-                elif filetype not in str(no_tags):
-                    error = 'No file found for that extension (' + filetype + ')'
+                    print('file downloaded succesfully as ' + dl_name)
+                    error = 'None'
+            else:
+                for idx, item in enumerable(link_list):
+                    print(idx + '. ' + item)
+                in_num = input('Which link is desired? (by number)')
+                if len(in_number) <= len(link_list) and type(in_number) == int:
+                    no_tags = link_list[in_num]
+                    urllib.request.urlretrieve(no_tags, dl_name + filetype)
+                    print('file downloaded succesfully as ' + dl_name)
+                    error = 'None'
+                else:
+                    print('No link found with that number (' + in_number + ')')
+
+
+        elif filetype not in str(no_tags):
+                error = 'No file found for that extension (' + filetype + ')'
     return error
 
 def compare(df1, df2, moments):
     if df.get_df_column(df1, 0) == df.get_df_column(df2, 0):
+        pass
         # merge dataframes at the date column
-    else
+    else:
+        pass
         # Iterate through the rows of the index column and dateparse the dates,
         # then merge
 
-    # take this resulting data fram and use its data to calculate moments
-    pass
+        # take this resulting data fram and use its data to calculate moments
+
 
 def plot(df):
-
-
+    print(fe_table)
     pass
 
 
