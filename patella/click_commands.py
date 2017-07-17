@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-'''Controls command line operations'''
+"""Controls command line operations"""
 
 ''' \/ Third-Party Packages \/ '''
 import click
 import pandas as pd
 import os, sys
 import os.path
+
 
 ''' \/ Local Packages \/ '''
 import htmlparser
@@ -18,7 +19,7 @@ class fileo():
     pass
 file1 = fileo()
 file2 = fileo()
-file1.df = file2.df = 0
+file1.df = file2.df = pd.DataFrame({'foo' : []})
 file1.path = file2.path = ''
 file1.name = file2.name = ''
 ''''''
@@ -44,31 +45,30 @@ def scrape_url(url, filetype, filename):
 
 @click.command()
 @click.argument('file_one')
-@click.argument('file_two')
+# @click.argument('file_two')
 @click.option('--delimiters', default=',:,', help='Specify file type delimiters in format <DELIM>:<DELIM2>')
-def load_data(file_one, file_two, delimiters):
+def load_data(file_one, delimiters):
     file1.path = os.getcwd() + '/' + file_one
-    file2.path = os.getcwd() + '/' + file_two
-    print(file1.path + ', ' + file2.path)
-    if os.path.exists(file1.path) and os.path.exists(file2.path):
+    # file2.path = os.getcwd() + '/' + file_two
+    # print(file1.path + ', ' + file2.path)
+
+    if os.path.exists(file1.path): # and os.path.exists(file2.path):
         file1.name = file_one
-        file2.name = file_two
         list_delims = delimiters.split(':')
         if len(list_delims) == 2:
-            file1.df = pd.read_table(file1.path, list_delims[0])
-            file2.df = pd.read_table(file2.path, list_delims[1])
+            file1.df = pd.read_table(file1.path, list_delims[0], header=0)
+            file2.df = htmlparser.get_fe()
+            # file2.df = pd.read_table(file2.path, list_delims[1])
             click.echo(file1.name + ' table: ' + str(file1.df))
-            click.echo(file2.name + ' table: ' + str(file2.df))
-            click.echo('files successfully loaded into Dataframes')
-        elif len(list_delims) < 2:
-            click.echo('too few arguments in list for option: --delimiters')
-        elif len(list_delims) > 2:
-            click.echo('too many arguments in list for option: --delimiters')
+            # click.echo(file2.name + ' table: ' + str(file2.df))
+            click.echo('file successfully loaded into Dataframes')
+        # elif len(list_delims) > 2:
+            # click.echo('too many arguments in list for option: --delimiters')
     else:
         if not os.path.exists(file1.path):
             click.echo('no files found with the name ' + file_one + ' in path ' + file1.path)
-        if not os.path.exists(file2.path):
-            click.echo('no files found with the name ' + file_two + ' in path ' + file1.path)
+        # if not os.path.exists(file2.path):
+            # click.echo('no files found with the name ' + file_two + ' in path ' + file1.path)
 
 
 
@@ -77,7 +77,7 @@ def load_data(file_one, file_two, delimiters):
 @click.argument('filename')
 def change_index(filename, column):
     if filename == file1:
-        file1_df.set_index(column)
+        file1.df.set_index(column)
     else:
         click.echo('no file found with that name')
     pass
@@ -95,15 +95,17 @@ def change_names(file, column_names):
 @click.option('--x_title', default=' ', help='specify the X axis title')
 @click.option('--y_title', default=' ', help='specify the Y axis title')
 def plot(dataframe, x_title, y_title):
-    htmlparser.plot(dataframe)
+    htmlparser.plot(dataframe, x=x_title, y=y_title)
     pass
 
 
 @click.command()
-@click.argument('url')
-@click.argument('fltp')
-def testme(url, fltp):
-    click.echo(url, fltp)
+@click.argument('sdf')
+def testme(sdf):
+    file1.path = os.getcwd() + '/' + sdf
+    file1.df = pd.read_table(file1.path, ',', header=0)
+    htmlparser.compare(file1.df, htmlparser.get_fe())
+
     pass
 
 patella.add_command(scrape_url, name='scrape')
