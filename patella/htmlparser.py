@@ -28,17 +28,49 @@ import logging
         matches = [x for x in self.list_commands(ctx)
                    if x.startswith(cmd_name)]
 '''
-fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
-fe_table = pd.read_html(fe_url, match='Vice-President', flavor='bs4', header=0, index_col=0)
-for idx, item in enumerate(get_df_column(fe_table, 0)):
-    fe_name = ''
-    # fe_name_list = []
-    for char in item:
-        if char != '(':
-            fe_name = fe_name + char
-    fe_table.setcell(fe_name, 0, idx) # find the actual command please
+
+
+def set_df_names(df, names):
+    df.columns(names)
+
+
+def get_df_column(df, arg):  # Getter for entire columns of the Dataframe
+    return df.iloc[arg, :]
+
+
+def get_df_row(df, arg):  # Getter for entire rows of the Dataframe
+    return df.iloc[: , arg]
+
+
+def get_df_cell(df, col, row):  # Getter for cells of the Dataframe
+    return df.iloc(col, row)
 
 logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)
+fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
+fe_table = pd.read_html(fe_url, match='Vice-President', flavor='bs4', header=0, index_col=2, parse_dates=True)[0]
+
+''' cleaning up the indices, for later
+for idx, item in enumerate(get_df_row(fe_table, 0)):
+    fe_name = ''
+    for char in item:
+        if char != '(':
+            if char != '/':
+                fe_name = fe_name + char
+        else:
+            # print(fe_table.iloc[idx, 0])
+            break
+    fe_table.iloc[]
+    print(fe_table)
+    # print(get_df_row(fe_table, 0))
+'''
+
+print(fe_table.index.tolist())
+suc = fe_table.index.get_level_values(0).values.tolist()
+for idx, item in enumerate(suc):
+    term_num = item.split('-')[0]
+    fe_table.setindex(#somevaluyes=)
+
+fe_table.set_index()
 
 def find_download_links(url, filetype, output_name):
     error = 'none'
@@ -72,9 +104,9 @@ def find_download_links(url, filetype, output_name):
             else:
                 for idx, item in enumerable(link_list):
                     print(idx + '. ' + item)
-                in_num = input('Which link is desired? (by number)')
+                in_number = input('Which link is desired? (by number)')
                 if len(in_number) <= len(link_list) and type(in_number) == int:
-                    no_tags = link_list[in_num]
+                    no_tags = link_list[in_number]
                     urllib.request.urlretrieve(no_tags, dl_name + filetype)
                     print('file downloaded succesfully as ' + dl_name)
                     error = 'None'
@@ -87,7 +119,8 @@ def find_download_links(url, filetype, output_name):
     return error
 
 def compare(df1, df2, moments):
-    if df.get_df_column(df1, 0) == df.get_df_column(df2, 0):
+#    if get_df_column(df1, 0) == get_df_column(df2, 0):
+# find first common year and start there. color data based on party
         pass
         # merge dataframes at the date column
     else:
@@ -110,22 +143,3 @@ def read_tsv(file_path, delim):  # Read the .tsv into the Dataframe
     data = pd.read_table(file_path, delimiter=delim)  # Read the data out of the .tsv and store it in data
     return data  # Return the Dataframe
 '''
-
-def set_df_names(df, names):
-    df.columns(names)
-
-
-def set_index(df, index):  # Sets a new index and drops that column
-    df.set_index(index, drop=true)
-
-
-def get_df_column(df, arg):  # Getter for entire columns of the Dataframe
-    return df.iloc[arg, :]
-
-
-def get_df_row(df, arg):  # Getter for entire rows of the Dataframe
-    return df.iloc[: , arg]
-
-
-def get_df_cell(df, col, row):  # Getter for cells of the Dataframe
-    return df.iloc(col, row)
