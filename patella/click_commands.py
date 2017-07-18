@@ -27,6 +27,8 @@ file1.name = file2.name = ''
 ''' TO DO
 Check for invalid file type (also check if it's a string)
 Make function for setting both data frames at once - improves readability.
+Add downloaded file names and paths to a text file for easy retrieval
+Update load() method to save the files names to a text file that the other functions auto load - clobber each time
 '''
 
 
@@ -43,6 +45,7 @@ def scrape_url(url, filetype, filename):
     click.echo('ERROR: ' + htmlparser.find_download_links(url, filetype, filename))  # Error reporting
 
 
+# In webservice: Give index and relevant data options
 @click.command()
 @click.argument('file_one')
 # @click.argument('file_two')
@@ -91,22 +94,22 @@ def change_names(file, column_names):
 
 
 @click.command()
-@click.argument('dataframe')
+@click.argument('file')
+@click.argument('col')
+@click.option('--title', default=' ', help='specify the plot title')
 @click.option('--x_title', default=' ', help='specify the X axis title')
 @click.option('--y_title', default=' ', help='specify the Y axis title')
-def plot(dataframe, x_title, y_title):
-    htmlparser.plot(dataframe, x=x_title, y=y_title)
-    pass
+def plot(file, col, title, x_title, y_title):
+    file1.path = os.getcwd() + '/' + file
+    file1.df = pd.read_table(file1.path, ',', header=0)
+    htmlparser.compare(file1.df, htmlparser.get_fe(), col, title, x_title, y_title)
 
 
 @click.command()
-@click.argument('sdf')
-def testme(sdf):
-    file1.path = os.getcwd() + '/' + sdf
-    file1.df = pd.read_table(file1.path, ',', header=0)
-    htmlparser.compare(file1.df, htmlparser.get_fe())
-
+@click.argument('foo')
+def testme(foo):
     pass
+
 
 patella.add_command(scrape_url, name='scrape')
 patella.add_command(testme, name='test')
