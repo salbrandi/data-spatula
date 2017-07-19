@@ -67,7 +67,7 @@ for idx, item in enumerate(fe_table.index.get_level_values(0).values.tolist()):
             fe_name = fe_name + char
     fe_names.append(fe_name)
 fe_table['President'] = fe_names
-print(fe_table)
+# print(fe_table)
 fe_table.set_index('year', drop=True, inplace=True)
 # print(fe_table) debugging
 
@@ -137,14 +137,14 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     foo = 0
     year_num = 1
     year_num_of = 1
-    for idx, item in enumerate(ind_list): # loop through the index of the data frame
-        if idx >= 1 and ind_list[idx-1] != ind_list[idx]: # After at least one loop (to avoid oob error) and if the index changes
-            years_list.append(ind_list[idx-1])  # append that value that changed
-            if interval == 0: # if its the first time setting the interval
-                interval = idx # set the interval
-    for idx, item in enumerate(years_list): # loop through the list of years
-        begin = interval*(idx+1) - interval # set the beginning of the years
-        end = interval*idx+1 # and the end
+    for idx, item in enumerate(ind_list):   # loop through the index of the data frame
+        if idx >= 1 and ind_list[idx-1] != ind_list[idx]:    # After at least one loop (to avoid oob error) and if the index changes
+            years_list.append(ind_list[idx-1])   # append that value that changed
+            if interval == 0:   # if its the first time setting the interval
+                interval = idx  # set the interval
+    for idx, item in enumerate(years_list):     # loop through the list of years
+        begin = interval*(idx+1) - interval     # set the beginning of the years
+        end = interval*idx+1    # and the end
         total_chg.append(df1.iloc[begin, data_col] - df1.iloc[end, data_col]) # calculate total change across the year
     # print(total_chg) DEBUG
     for idx, item in enumerate(years_list):
@@ -153,7 +153,6 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     for idx, item in enumerate(df2.index.get_level_values(0)): # loop  through the fe_table
         yr = int(item)
         lowdiff = years_list[0] - yr
-        highdiff = yr - years_list[len(years_list)-1]
         if idx >= 1: # after one iteration
             if yr > int(years_list[0]) and yr < int(years_list[len(years_list)-1]): # if  the term year is inside the year list
                 for val in range(yr-foo):
@@ -178,7 +177,7 @@ def compare(df1, df2, col, title, x_lb, y_lb):
             year_num_of = 1
         party_office_list.append(year_num_of)  # append the year number
     # find first common year and start there. color data based on party
-    plotframe = pd.DataFrame({'foo' : []})
+    plotframe = pd.DataFrame({'foo': []})
     plotframe['Total Change'] = total_chg
     plotframe['% Change'] = cov_list
     plotframe['Years'] = years_list
@@ -188,12 +187,14 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     plotframe['Years Party in Office'] = party_office_list
     plotframe.set_index('foo', drop=True, inplace=True)
     plotframe.set_index('Years', drop=False, inplace=True)
-    print(plotframe)
+    #print(plotframe)
     styles = ['r.-', 'bo-', 'y^-']
     fig, ax = plt.subplots(figsize=(15, 15))
     grouped = plotframe.groupby('First Executive')
-    grouped.plot(x='Years in Office', y='% Change', kind='line', ax=ax, title=title)
+    lineplot = grouped.plot(x='Years in Office', y='% Change', kind='line', ax=ax, title=title)
     plt.xlabel(x_lb)
     plt.ylabel(y_lb)
     ax.legend(grouped.groups.keys())
-    plt.show()
+    # plt.show()
+
+    return plotframe
