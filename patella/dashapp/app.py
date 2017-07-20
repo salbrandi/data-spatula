@@ -19,7 +19,7 @@ def generate_table(dataframe, max_rows=10):
         ]) for i in range(min(len(dataframe), max_rows))]
     )
 
-path = '/home/sbrandi/Desktop/patella/patella/indicator-4-2-0-4-1.csv'
+path = '/home/sbrandi/Desktop/patella/patella/indicator-4-2-0-4-1.transfer'
 df = pd.read_table(path, ',', header=0)
 
 app.layout = html.Div(children=[

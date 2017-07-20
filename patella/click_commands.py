@@ -100,7 +100,7 @@ def change_names(file, column_names):
 @click.option('--x_title', default=' ', help='specify the X axis title')
 @click.option('--y_title', default=' ', help='specify the Y axis title')
 def plot(file, col, title, x_title, y_title):
-    file1.path = os.getcwd() + '/' + file
+    file1.path = os.getcwd() + '/data/' + file
     file1.df = pd.read_table(file1.path, ',', header=0)
     htmlparser.compare(file1.df, htmlparser.get_fe(), col, title, x_title, y_title)
 

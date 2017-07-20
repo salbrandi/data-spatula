@@ -14,6 +14,9 @@ import logging
 import re
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+from bokeh.plotting import figure, show
+from bokeh.embed import components
+from flask import render_template
 
 # Add problem you are trying to solve in DocString
 
@@ -43,7 +46,7 @@ def get_df_row(df, arg):  # Getter for entire rows of the Dataframe
 
 
 def get_df_cell(df, col, row):  # Getter for cells of the Dataframe
-    return df.iloc(col, row)
+    return df.iloc[col, row]
 
 logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)
 fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
@@ -195,6 +198,15 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     plt.xlabel(x_lb)
     plt.ylabel(y_lb)
     ax.legend(grouped.groups.keys())
-    # plt.show()
 
-    return plotframe
+    # plt.show()
+    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb)
+    palette = ['Green', 'Blue', 'Red']
+    imdex = -1
+    for name, data in grouped:
+        imdex += 1
+        p.legend
+        p.line(x=data['Years in Office'], y=data['% Change'], color=palette[imdex], legend=name)
+    script, div = components(p)
+
+    return render_template('graph.html', script=script, div=div)
