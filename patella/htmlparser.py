@@ -78,7 +78,7 @@ fe_table.set_index('year', drop=True, inplace=True)
 def get_fe():
     return(fe_table)
 
-def find_download_links(url, filetype, output_name):
+def find_download_links(url, filetype, output_name, in_number=0):
     error = 'None'
     p_url = urlparse(url)
     domain = '{urm.scheme}://{urm.netloc}'.format(urm=p_url)
@@ -114,7 +114,7 @@ def find_download_links(url, filetype, output_name):
             elif len(link_list)>1:
                 for idx, item in enumerate(link_list):
                     print(str(idx) + '. ' + item)
-                in_number = input('Which link is desired? (by number):   ')
+                # in_number = input('Which link is desired? (by number):   ')
                 if int(in_number) <= len(link_list):
                     no_tags = link_list[int(in_number)]
                     urllib.request.urlretrieve(no_tags, dl_name + filetype)

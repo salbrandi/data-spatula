@@ -24,12 +24,37 @@ def scraped():
     return render_template('plot.html')
 
 
-
 '''
 TO-DO:
 1. Turn the Input boxes into variables in both files for easier upkeep
 2. Before displaying graph, redirect to options page with table - axis labes, graph title, data columns, etc
 '''
+
+
+@app.route('/patella/options', methods=['POST', 'GET'])
+def options():
+    if request.method == 'POST':
+        url = request.form['url']
+        filetype = request.form['filetype']
+        outname = request.form['filename']
+        parseobj = htmlparser.find_download_links(url, filetype, outname)
+        result = parseobj['href_list']
+        return render_template('options.html', result=result, ftype=filetype)
+
+
+@app.route('/patella/table', methods=['POST', 'GET'])
+def table():
+    if request.method == 'POST':
+        link = request.form['dlink']
+        filetype = request.form['filetype']
+        outname = request.form['filename']
+        parseobj = htmlparser.find_download_links(url, filetype, outname)
+        result = parseobj['href_list']
+        return render_template('options.html', result=result, ftype=filetype)
+
+test_data = ['https://catalog.data.gov/dataset/directory-of-homeless-population-by-year-ffe5a',
+'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python']
+
 
 @app.route('/patella/plot', methods=['POST', 'GET'])
 def plotted():

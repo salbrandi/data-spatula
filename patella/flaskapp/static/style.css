@@ -1,11 +1,21 @@
 /* stylesheet */
 .dftable {
-  position:absolute;
-  left:750px;
+  position: absolute;
+  left: 750px;
+}
+
+body {
+  /*
+  background-image: url("http://jansmriti.com/upload_img/3568about2.JPG");
+  backgrund-size: 100% 100%;
+  */
+  background-color: #6691d6;
+  color: #ffffff;
+  text-align: center;
 }
 
 #plot {
-  position:relative;
-  left:750px;
+  position: relative;
+  left: 750px;
   /*bottom: 200px;*/
 }
