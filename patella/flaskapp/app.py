@@ -13,33 +13,46 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/patella/input')
+@app.route('/patella/input', methods =['POST', 'GET'])
 def flask_scrape():
-    return render_template('page.html')
+    return render_template('input.html')
 
 
-''' 
-TO-DO: 
+@app.route('/patella/scrape_results', methods =['POST', 'GET'])
+def scraped():
+    linklist = []
+    return render_template('plot.html')
+
+
+
+'''
+TO-DO:
 1. Turn the Input boxes into variables in both files for easier upkeep
 2. Before displaying graph, redirect to options page with table - axis labes, graph title, data columns, etc
 '''
 
-@app.route('/patella/url_result', methods=['POST', 'GET'])
-def flask_scraped():
-    file = ''
+@app.route('/patella/plot', methods=['POST', 'GET'])
+def plotted():
+    filename = ''
     url = ''
+    data_column = 0
     if request.method == 'POST':
-        result=request.form
+        print("got here")
+        data_column = request.form['datacol']
+        filename = request.form['filepath']
+        result = request.form
         print(result.items())
         for key, value in result.items():
             if key == 'Local File':
-                file = value
-                print(file)
+                filename = value
+                print(filename)
             elif key == 'Data Scrape URL':
                 url = value
-        filepath = '/home/sbrandi/Desktop/patella/patella/data/indicator-4-2-0-4-1.transfer' + file
+        filepath =  filename
         df = pd.read_table(filepath, ',', header=0, engine='python')
-        return htmlparser.compare(df, htmlparser.get_fe(), 3, '', '', '')
+        print(data_column)
+        print(filename + ", " + url)
+        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--<link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css" type="text/css" />-->
+    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.6.min.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+  </head>
+  <body>
+    <div class=page>
+      <h1 style="position:relative; left: 200px">Your Graph!</h1>
+      <p id=plot>This plot was Generated using this table: {{ df | safe }}</p>
+      {{ div | safe}}
+      {{ script | safe }}
+
+
+
+    </div>
+  </body>
+</html>

@@ -38,11 +38,13 @@ def patella():
 
 @click.command()
 @click.argument('url')
-@click.option('--filename', default='dlfile', help='specify the name of the local file that will be downloaded to the current directory')
+@click.option('--filename', default='datafile', help='specify the name of the local file that will be downloaded to the current directory')
 @click.option('--filetype', default='.csv', help='specify the file type the scraper will look for')
 def scrape_url(url, filetype, filename):
-    htmlparser.find_download_links(url, filetype, filename)
-    click.echo('ERROR: ' + htmlparser.find_download_links(url, filetype, filename))  # Error reporting
+    # htmlparser.find_download_links(url, filetype, filename)
+    parseobj = htmlparser.find_download_links(url, filetype, filename)
+    if type(parseobj) != 'NoneType':
+        click.echo('ERROR: ' + parseobj['error'])  # Error reporting
 
 
 # In webservice: Give index and relevant data options
@@ -61,8 +63,9 @@ def load_data(file_one, delimiters):
         if len(list_delims) == 2:
             file1.df = pd.read_table(file1.path, list_delims[0], header=0)
             file2.df = htmlparser.get_fe()
+            os.environ['LOCAL_FILE_PATH'] = file1.path
             # file2.df = pd.read_table(file2.path, list_delims[1])
-            click.echo(file1.name + ' table: ' + str(file1.df))
+            # click.echo(file1.name + ' table: ' + str(file1.df))
             # click.echo(file2.name + ' table: ' + str(file2.df))
             click.echo('file successfully loaded into Dataframes')
         # elif len(list_delims) > 2:

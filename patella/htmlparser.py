@@ -23,9 +23,9 @@ from flask import render_template
 
 ''' TO DO, ! = importance
 !! Check for invalid file type (also check if it's a string) [*]
-!! check for invalid url [ ]
+!! catch invalid url [ ]
 !! check for existing files [ ]
-!!! If multiple hrefs, list and let the user choose - fig 1 [~]
+!!! If multiple hrefs, list and let the user choose - fig 1 [*]
 !!! add http:// at the beginning if missing [*]
 ! be more flexible with format [*]
 '''
@@ -79,49 +79,55 @@ def get_fe():
     return(fe_table)
 
 def find_download_links(url, filetype, output_name):
-    error = 'none'
+    error = 'None'
     p_url = urlparse(url)
     domain = '{urm.scheme}://{urm.netloc}'.format(urm=p_url)
-    dl_name = output_name                          #
+    dl_name = output_name
+    link_list = []
     if filetype == output_name[-4:]:               # Format the file name so user input is flexible
         dl_name = output_name[:len(output_name)-4]  # Can include file extension or none
     if url[-4:] == filetype:    # Before anything, check if the url entered IS a dl link
         urllib.request.urlretrieve(url, dl_name + filetype)
         print('file downloaded successfully as ' + dl_name)
+        link_list[0] = url
         error = 'None'
-        return
     else:
         r = urllib.request.urlopen(url)
         soup = BeautifulSoup(r, 'html.parser')
         ext_length = len(filetype)
-        link_list = []
+
         for link in soup.find_all('a', string=True):  # look through the link tags as strings
             no_tags = link.get('href')
             logging.info(str(no_tags))
             if filetype == str(no_tags)[-ext_length:]:  # Check the three letter file extension
                 if 'http://' not in no_tags:  # If no first part of the url, add it
-                    no_tags = domain + no_tags
+                    no_tags = domain + '/' + no_tags
+                # print(no_tags)
                 link_list.append(no_tags)
-            if no_tags != None:  # Null check
-                if len(link_list)==1:
-                        urllib.request.urlretrieve(no_tags, dl_name + filetype)
-                        print('file downloaded successfully as ' + dl_name)
-                        error = 'None'
+        if no_tags != None:  # Null check
+            # print(link_list)
+            if len(link_list) == 1:
+                print("One link found: " + no_tags)
+                urllib.request.urlretrieve(no_tags, dl_name + filetype)
+                print('file downloaded successfully as ' + dl_name)
+                error = 'None'
+            elif len(link_list)>1:
+                for idx, item in enumerate(link_list):
+                    print(str(idx) + '. ' + item)
+                in_number = input('Which link is desired? (by number):   ')
+                if int(in_number) <= len(link_list):
+                    no_tags = link_list[int(in_number)]
+                    urllib.request.urlretrieve(no_tags, dl_name + filetype)
+                    print('file downloaded succesfully as ' + dl_name)
+                    error = 'None'
                 else:
-                    for idx, item in enumerate(link_list):
-                        print(str(idx) + '. ' + item)
-                    in_number = input('Which link is desired? (by number)')
-                    if int(in_number) <= len(link_list):
-                        no_tags = link_list[int(in_number)]
-                        urllib.request.urlretrieve(no_tags, dl_name + filetype)
-                        print('file downloaded succesfully as ' + dl_name)
-                        error = 'None'
-                    else:
-                        error = 'No link found with that number (' + str(in_number) + ')'
+                    error = 'No link found with that number (' + str(in_number) + ')'
+            else:
+                error = 'No links found!'
 
-            elif filetype not in str(no_tags):
+        elif filetype not in str(no_tags):
                 error = 'No file found for that extension (' + filetype + ')'
-    return error
+    return { 'error':error, 'download_name':dl_name, 'href_list':link_list }
 
 
 def compare(df1, df2, col, title, x_lb, y_lb):
@@ -182,7 +188,7 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     # find first common year and start there. color data based on party
     plotframe = pd.DataFrame({'foo': []})
     plotframe['Total Change'] = total_chg
-    plotframe['% Change'] = cov_list
+    plotframe['Percent Change'] = cov_list
     plotframe['Years'] = years_list
     plotframe['Party'] = party_list
     plotframe['First Executive'] = fe_list
@@ -191,22 +197,24 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     plotframe.set_index('foo', drop=True, inplace=True)
     plotframe.set_index('Years', drop=False, inplace=True)
     #print(plotframe)
+
     styles = ['r.-', 'bo-', 'y^-']
     fig, ax = plt.subplots(figsize=(15, 15))
     grouped = plotframe.groupby('First Executive')
-    lineplot = grouped.plot(x='Years in Office', y='% Change', kind='line', ax=ax, title=title)
+    lineplot = grouped.plot(x='Years in Office', y='Percent Change', kind='line', ax=ax, title=title)
     plt.xlabel(x_lb)
     plt.ylabel(y_lb)
     ax.legend(grouped.groups.keys())
 
     # plt.show()
     p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb)
-    palette = ['Green', 'Blue', 'Red']
+    palette = ['Green', 'Blue', 'Red', 'Black', 'Yellow']
     imdex = -1
     for name, data in grouped:
         imdex += 1
         p.legend
-        p.line(x=data['Years in Office'], y=data['% Change'], color=palette[imdex], legend=name)
+        p.line(x=data['Years in Office'], y=data['Percent Change'], color=palette[imdex], legend=name)
     script, div = components(p)
+    df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')
 
-    return render_template('graph.html', script=script, div=div)
+    return render_template('plot.html', script=script, div=div, df=df_htmltable)

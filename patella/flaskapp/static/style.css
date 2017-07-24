@@ -1,0 +1,11 @@
+/* stylesheet */
+.dftable {
+  position:absolute;
+  left:750px;
+}
+
+#plot {
+  position:relative;
+  left:750px;
+  /*bottom: 200px;*/
+}

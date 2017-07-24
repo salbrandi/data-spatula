@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patella</title>
+    </head>
+
+    <body>
+
+        <h2>Welcome to Patella</h2>
+        <h4>A resource that allows you to compare the variation across years in data sets to the political parties</h4>
+        <div id="formdiv" title="Enter your data!">
+        <form action="/patella/scrape" method="POST"> <!--convert this to the addr of the site-->
+            <p>Data Scrape URL<br>   <input title="url" type="text" name="url" value=""/></p>
+            <p>Download File Name<br>   <input title="filename" type="text" name="filename" value="datafile.csv"/></p>
+            <p>Filetype (.csv, .tsv)<br>   <input title="filetype" type="text" name="filetype" value=".csv"/></p>
+            <!--<p>Date Column   <input title="datacol" type="text" name = "datacol" /></p>-->
+            <!--<p>Local File   <input title="local" type="file" name="local" /></p>-->
+            <p><input type="submit" name="action" value="Scrape URL for Data" /></p>
+        </form>
+        <form action="/patella/plot" method="POST">
+          <p> Local Filepath (testing purposes, more functional later)<br>
+          <input type="text" name="filepath" value="C:\\Users\\power\\Desktop\\patella\\patella\\data\\indicator-4-2-0-4-1.transfer"/></p>
+          <input type="text" name="datacol" value="3"/></p>
+          <input type="submit" name="action" value="Read File"/>
+        </form>
+</body>
+</html>
