@@ -42,7 +42,7 @@ def patella():
 @click.option('--filetype', default='.csv', help='specify the file type the scraper will look for')
 def scrape_url(url, filetype, filename):
     # htmlparser.find_download_links(url, filetype, filename)
-    parseobj = htmlparser.find_download_links(url, filetype, filename)
+    parseobj = htmlparser.find_download_links(url, filetype, filename, download=True)
     if type(parseobj) != 'NoneType':
         click.echo('ERROR: ' + parseobj['error'])  # Error reporting
 

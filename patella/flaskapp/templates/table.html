@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Patella</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    </head>
+
+    <body>
+      {{ table | safe }}
+
+        <div id=header>
+          <h1>Table Result:</h1>
+          <h4>
+            This table was made by scraping the url for download links, downloading the selected file and reading the file into a table
+          </h4>
+        </div>
+
+        <div id="formdiv" title="Enter your data!">
+          <form action="/patella/options" method="POST" style="display:inline-block;margin:50px;"> <!--convert this to the addr of the site-->
+            <p>Date Column   <input title="datacol" type="text" name = "datacol" /></p>
+            <p><input type="submit" name="action" value="Graph vs First Executives" /></p>
+          </form>
+        </div>
+</body>
+</html>

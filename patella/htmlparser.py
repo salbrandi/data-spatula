@@ -78,56 +78,67 @@ fe_table.set_index('year', drop=True, inplace=True)
 def get_fe():
     return(fe_table)
 
-def find_download_links(url, filetype, output_name, in_number=0):
+def find_download_links(url, filetype, output_name, download=False):
     error = 'None'
     p_url = urlparse(url)
     domain = '{urm.scheme}://{urm.netloc}'.format(urm=p_url)
     dl_name = output_name
     link_list = []
+    no_tags = ''
     if filetype == output_name[-4:]:               # Format the file name so user input is flexible
         dl_name = output_name[:len(output_name)-4]  # Can include file extension or none
     if url[-4:] == filetype:    # Before anything, check if the url entered IS a dl link
-        urllib.request.urlretrieve(url, dl_name + filetype)
-        print('file downloaded successfully as ' + dl_name)
-        link_list[0] = url
-        error = 'None'
+        if download:
+            urllib.request.urlretrieve(url, os.getcwd() + '/data/' + dl_name + filetype)
+            print('file downloaded successfully as ' + dl_name)
+            link_list.append(url)
+            error = 'None'
     else:
         r = urllib.request.urlopen(url)
         soup = BeautifulSoup(r, 'html.parser')
         ext_length = len(filetype)
-
         for link in soup.find_all('a', string=True):  # look through the link tags as strings
             no_tags = link.get('href')
+            print(no_tags)
             logging.info(str(no_tags))
             if filetype == str(no_tags)[-ext_length:]:  # Check the three letter file extension
                 if 'http://' not in no_tags:  # If no first part of the url, add it
                     no_tags = domain + '/' + no_tags
                 # print(no_tags)
                 link_list.append(no_tags)
-        if no_tags != None:  # Null check
-            # print(link_list)
-            if len(link_list) == 1:
-                print("One link found: " + no_tags)
-                urllib.request.urlretrieve(no_tags, dl_name + filetype)
-                print('file downloaded successfully as ' + dl_name)
-                error = 'None'
-            elif len(link_list)>1:
-                for idx, item in enumerate(link_list):
-                    print(str(idx) + '. ' + item)
-                # in_number = input('Which link is desired? (by number):   ')
-                if int(in_number) <= len(link_list):
-                    no_tags = link_list[int(in_number)]
-                    urllib.request.urlretrieve(no_tags, dl_name + filetype)
-                    print('file downloaded succesfully as ' + dl_name)
+        if download:
+            if no_tags != None:  # Null check
+                # print(link_list)
+                if len(link_list) == 1:
+                    print("One link found: " + no_tags)
+                    urllib.request.urlretrieve(no_tags, os.getcwd() + '/data/' + dl_name + filetype)
+                    print('file downloaded successfully as ' + dl_name)
                     error = 'None'
+                elif len(link_list)>1:
+                    for idx, item in enumerate(link_list):
+                        print(str(idx) + '. ' + item)
+                    # in_number = input('Which link is desired? (by number):   ')
+                    if int(in_number) <= len(link_list):
+                        no_tags = link_list[int(in_number)]
+                        urllib.request.urlretrieve(no_tags, os.getcwd() + '/data/' + dl_name + filetype)
+                        print('file downloaded succesfully as ' + dl_name)
+                        error = 'None'
+                    else:
+                        error = 'No link found with that number (' + str(in_number) + ')'
                 else:
-                    error = 'No link found with that number (' + str(in_number) + ')'
-            else:
-                error = 'No links found!'
-
-        elif filetype not in str(no_tags):
+                    error = 'No links found!'
+            elif filetype not in str(no_tags):
                 error = 'No file found for that extension (' + filetype + ')'
     return { 'error':error, 'download_name':dl_name, 'href_list':link_list }
+
+
+
+def file_to_htmltable(filepath):
+        dataframe = pd.read_table(filepath, ',', header=0, engine='python')
+        htmltable = dataframe.to_html(bold_rows=True, escape=True, classes='dftable')
+        return htmltable
+
+
 
 
 def compare(df1, df2, col, title, x_lb, y_lb):
@@ -217,4 +228,4 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     script, div = components(p)
     df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')
 
-    return render_template('plot.html', script=script, div=div, df=df_htmltable)
+    return render_template('plot.html', script=script, div=div, table=df_htmltable)

@@ -7,6 +7,9 @@ import os
 app = Flask(__name__)
 # DATA_DIR = os.environ('DATA_DIR')  # update the directory path to use env variables
 
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+
+
 
 @app.route('/')
 def index():
@@ -31,26 +34,28 @@ TO-DO:
 '''
 
 
+
 @app.route('/patella/options', methods=['POST', 'GET'])
 def options():
     if request.method == 'POST':
         url = request.form['url']
         filetype = request.form['filetype']
         outname = request.form['filename']
-        parseobj = htmlparser.find_download_links(url, filetype, outname)
+        parseobj = htmlparser.find_download_links(url, filetype, outname, download=False)
         result = parseobj['href_list']
-        return render_template('options.html', result=result, ftype=filetype)
+        return render_template('options.html', result=result, ftype=filetype, filename=outname)
 
 
 @app.route('/patella/table', methods=['POST', 'GET'])
 def table():
     if request.method == 'POST':
-        link = request.form['dlink']
-        filetype = request.form['filetype']
-        outname = request.form['filename']
-        parseobj = htmlparser.find_download_links(url, filetype, outname)
+        dlname = request.form['dlink']
+        outname = request.form['outname']
+        print(outname)
+        parseobj = htmlparser.find_download_links(dlname[:-1], '.csv', outname, download=True)
         result = parseobj['href_list']
-        return render_template('options.html', result=result, ftype=filetype)
+        table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
+        return render_template('table.html', linkname=dlname, table=table)
 
 test_data = ['https://catalog.data.gov/dataset/directory-of-homeless-population-by-year-ffe5a',
 'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python']
