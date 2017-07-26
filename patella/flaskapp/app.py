@@ -40,10 +40,9 @@ def options():
     if request.method == 'POST':
         url = request.form['url']
         filetype = request.form['filetype']
-        outname = request.form['filename']
-        parseobj = htmlparser.find_download_links(url, filetype, outname, download=False)
+        parseobj = htmlparser.find_download_links(url, filetype, 'datafile.csv', download=False)
         result = parseobj['href_list']
-        return render_template('options.html', result=result, ftype=filetype, filename=outname)
+        return render_template('options.html', result=result, ftype=filetype)
 
 
 @app.route('/patella/table', methods=['POST', 'GET'])
@@ -58,16 +57,34 @@ def table():
         return render_template('table.html', linkname=dlname, table=table)
 
 test_data = ['https://catalog.data.gov/dataset/directory-of-homeless-population-by-year-ffe5a',
-'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python']
+'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python',
+'http://www.sample-videos.com/download-sample-csv.php']
 
 
-@app.route('/patella/plot', methods=['POST', 'GET'])
+@app.route('/patella/plotlocal', methods=['POST', 'GET'])
 def plotted():
     filename = ''
     url = ''
     data_column = 0
     if request.method == 'POST':
-        print("got here")
+        data_column = request.form['datacol']
+        result = request.form
+        print(result.items())
+        for key, value in result.items():
+            if key == 'Local File':
+                filename = value
+                print(filename)
+            elif key == 'Data Scrape URL':
+                url = value
+        filepath =  os.getcwd() + '/data/'
+        df = pd.read_table(filepath, ',', header=0, engine='python')
+        print(data_column)
+        print(filename + ", " + url)
+        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')
+
+@app.route('/patella/plot', methods=['POST', 'GET'])
+def plot_from_df():
+    if request.method == 'POST':
         data_column = request.form['datacol']
         filename = request.form['filepath']
         result = request.form

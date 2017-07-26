@@ -85,18 +85,18 @@ def find_download_links(url, filetype, output_name, download=False):
     dl_name = output_name
     link_list = []
     no_tags = ''
-    if filetype == output_name[-4:]:               # Format the file name so user input is flexible
-        dl_name = output_name[:len(output_name)-4]  # Can include file extension or none
-    if url[-4:] == filetype:    # Before anything, check if the url entered IS a dl link
+    ext_length = len(filetype)
+    if filetype == output_name[-ext_length:]:               # Format the file name so user input is flexible
+        dl_name = output_name[:len(output_name)-ext_length]  # Can include file extension or none
+    if url[-ext_length:] == filetype:
+        link_list.append(url)    # Before anything, check if the url entered IS a dl link
         if download:
             urllib.request.urlretrieve(url, os.getcwd() + '/data/' + dl_name + filetype)
             print('file downloaded successfully as ' + dl_name)
-            link_list.append(url)
             error = 'None'
     else:
         r = urllib.request.urlopen(url)
         soup = BeautifulSoup(r, 'html.parser')
-        ext_length = len(filetype)
         for link in soup.find_all('a', string=True):  # look through the link tags as strings
             no_tags = link.get('href')
             print(no_tags)
@@ -104,7 +104,7 @@ def find_download_links(url, filetype, output_name, download=False):
             if filetype == str(no_tags)[-ext_length:]:  # Check the three letter file extension
                 if 'http://' not in no_tags:  # If no first part of the url, add it
                     no_tags = domain + '/' + no_tags
-                # print(no_tags)
+                # print(no_tags
                 link_list.append(no_tags)
         if download:
             if no_tags != None:  # Null check
@@ -135,13 +135,10 @@ def find_download_links(url, filetype, output_name, download=False):
 
 def file_to_htmltable(filepath):
         dataframe = pd.read_table(filepath, ',', header=0, engine='python')
-        htmltable = dataframe.to_html(bold_rows=True, escape=True, classes='dftable')
+        htmltable = dataframe.to_html(bold_rows=True, escape=True)
         return htmltable
 
-
-
-
-def compare(df1, df2, col, title, x_lb, y_lb):
+def compare(df1, df2, col, title, x_lb, y_lb, html='plotlocal.html'):
     #### V Some Global variables V ####
     data_col = int(col)
     df1.set_index('Year', drop=True, inplace=True)
@@ -228,4 +225,4 @@ def compare(df1, df2, col, title, x_lb, y_lb):
     script, div = components(p)
     df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')
 
-    return render_template('plot.html', script=script, div=div, table=df_htmltable)
+    return render_template(html, script=script, div=div, table=df_htmltable)
