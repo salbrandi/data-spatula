@@ -54,9 +54,9 @@ def table():
         parseobj = htmlparser.find_download_links(dlname[:-1], '.csv', outname, download=True)
         result = parseobj['href_list']
         table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
-        return render_template('table.html', linkname=dlname, table=table)
+        return render_template('table.html', linkname=dlname, table=table)#['template']
 
-test_data = ['https://catalog.data.gov/dataset/directory-of-homeless-population-by-year-ffe5a',
+test_data = ['https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
 'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python',
 'http://www.sample-videos.com/download-sample-csv.php']
 
@@ -67,39 +67,22 @@ def plotted():
     url = ''
     data_column = 0
     if request.method == 'POST':
-        data_column = request.form['datacol']
+        data_column = request.form['datacol']  # Get the data column input from html form
         result = request.form
         print(result.items())
-        for key, value in result.items():
-            if key == 'Local File':
-                filename = value
-                print(filename)
-            elif key == 'Data Scrape URL':
-                url = value
-        filepath =  os.getcwd() + '/data/'
+        filename = result['filepath']
+        filepath = filename
         df = pd.read_table(filepath, ',', header=0, engine='python')
-        print(data_column)
-        print(filename + ", " + url)
-        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')
+        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')#['template']  # Return compare() which returns a render_template() object
 
 @app.route('/patella/plot', methods=['POST', 'GET'])
 def plot_from_df():
     if request.method == 'POST':
-        data_column = request.form['datacol']
-        filename = request.form['filepath']
+        data_column = request.form['datacol'] # get the data column from html form
         result = request.form
-        print(result.items())
-        for key, value in result.items():
-            if key == 'Local File':
-                filename = value
-                print(filename)
-            elif key == 'Data Scrape URL':
-                url = value
-        filepath =  filename
+        filepath = os.getcwd() + '/data/' + 'datafile.csv'
         df = pd.read_table(filepath, ',', header=0, engine='python')
-        print(data_column)
-        print(filename + ", " + url)
-        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')
+        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')#['template'] # Return compare() which returns a render_template() object
 
 
 if __name__ == '__main__':

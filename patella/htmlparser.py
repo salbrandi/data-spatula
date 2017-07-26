@@ -2,21 +2,17 @@
 """Html parsing and dataframe utility"""
 
 ''' \/ Third-Party Imports \/ '''
-
-# import matplotlib
-import pandas as pd
-import os, sys
-from bs4 import BeautifulSoup
-import urllib.request
-from urllib.parse import urlparse
-import logging
-# import dateparser
-import re
-import matplotlib.pyplot as plt
-plt.style.use('ggplot')
 from bokeh.plotting import figure, show
 from bokeh.embed import components
 from flask import render_template
+from urllib.parse import urlparse
+from bs4 import BeautifulSoup
+import pandas as pd
+import os, sys
+import urllib.request
+import logging
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
 # Add problem you are trying to solve in DocString
 
@@ -78,7 +74,17 @@ fe_table.set_index('year', drop=True, inplace=True)
 def get_fe():
     return(fe_table)
 
-def find_download_links(url, filetype, output_name, download=False):
+def find_download_links(url, filetype, output_name, in_number=0, download=False, render_template=True):
+
+    """
+    :param url:
+    :param filetype:
+    :param output_name:
+    :param in_number:
+    :param download:
+    :param render_template:
+    :return:
+    """
     error = 'None'
     p_url = urlparse(url)
     domain = '{urm.scheme}://{urm.netloc}'.format(urm=p_url)
@@ -86,14 +92,13 @@ def find_download_links(url, filetype, output_name, download=False):
     link_list = []
     no_tags = ''
     ext_length = len(filetype)
-    if filetype == output_name[-ext_length:]:               # Format the file name so user input is flexible
+    if filetype == output_name[-ext_length:]:  # Format the file name so user input is flexible
         dl_name = output_name[:len(output_name)-ext_length]  # Can include file extension or none
     if url[-ext_length:] == filetype:
-        link_list.append(url)    # Before anything, check if the url entered IS a dl link
-        if download:
+        link_list.append(url)  # Before anything, check if the url entered IS a dl link
+        if download: # check if directory exists, check if file is parseable, check allowed file extensions
             urllib.request.urlretrieve(url, os.getcwd() + '/data/' + dl_name + filetype)
             print('file downloaded successfully as ' + dl_name)
-            error = 'None'
     else:
         r = urllib.request.urlopen(url)
         soup = BeautifulSoup(r, 'html.parser')
@@ -113,8 +118,7 @@ def find_download_links(url, filetype, output_name, download=False):
                     print("One link found: " + no_tags)
                     urllib.request.urlretrieve(no_tags, os.getcwd() + '/data/' + dl_name + filetype)
                     print('file downloaded successfully as ' + dl_name)
-                    error = 'None'
-                elif len(link_list)>1:
+                elif len(link_list) > 1:
                     for idx, item in enumerate(link_list):
                         print(str(idx) + '. ' + item)
                     # in_number = input('Which link is desired? (by number):   ')
@@ -122,7 +126,6 @@ def find_download_links(url, filetype, output_name, download=False):
                         no_tags = link_list[int(in_number)]
                         urllib.request.urlretrieve(no_tags, os.getcwd() + '/data/' + dl_name + filetype)
                         print('file downloaded succesfully as ' + dl_name)
-                        error = 'None'
                     else:
                         error = 'No link found with that number (' + str(in_number) + ')'
                 else:
@@ -132,13 +135,25 @@ def find_download_links(url, filetype, output_name, download=False):
     return { 'error':error, 'download_name':dl_name, 'href_list':link_list }
 
 
-
 def file_to_htmltable(filepath):
         dataframe = pd.read_table(filepath, ',', header=0, engine='python')
         htmltable = dataframe.to_html(bold_rows=True, escape=True)
         return htmltable
 
+
 def compare(df1, df2, col, title, x_lb, y_lb, html='plotlocal.html'):
+
+    """
+    :param df1:
+    :param df2:
+    :param col:
+    :param title:
+    :param x_lb:
+    :param y_lb:
+    :param html:
+    :return:
+    """
+
     #### V Some Global variables V ####
     data_col = int(col)
     df1.set_index('Year', drop=True, inplace=True)
@@ -154,15 +169,26 @@ def compare(df1, df2, col, title, x_lb, y_lb, html='plotlocal.html'):
     foo = 0
     year_num = 1
     year_num_of = 1
+    print(ind_list)
     for idx, item in enumerate(ind_list):   # loop through the index of the data frame
         if idx >= 1 and ind_list[idx-1] != ind_list[idx]:    # After at least one loop (to avoid oob error) and if the index changes
+            #print(ind_list[idx-1])
+            #print(ind_list[idx])
             years_list.append(ind_list[idx-1])   # append that value that changed
             if interval == 0:   # if its the first time setting the interval
                 interval = idx  # set the interval
+                print(interval)
     for idx, item in enumerate(years_list):     # loop through the list of years
-        begin = interval*(idx+1) - interval     # set the beginning of the years
-        end = interval*idx+1    # and the end
-        total_chg.append(df1.iloc[begin, data_col] - df1.iloc[end, data_col]) # calculate total change across the year
+        begin = interval*(idx)     # set the beginning of the years
+        end = interval*(idx+1)    # and the end
+        print(begin)
+        print(end)
+        if end < len(ind_list):
+            total_chg.append(df1.iloc[begin, data_col] - df1.iloc[end, data_col]) # calculate total change across the year
+        else:
+            end = len(ind_list) - begin
+            total_chg.append(
+                df1.iloc[begin, data_col] - df1.iloc[end, data_col])  # calculate total change across the year
     # print(total_chg) DEBUG
     for idx, item in enumerate(years_list):
         cov = total_chg[idx]/total_chg[idx-1]*100 # calculate change from year to year
@@ -215,14 +241,15 @@ def compare(df1, df2, col, title, x_lb, y_lb, html='plotlocal.html'):
     ax.legend(grouped.groups.keys())
 
     # plt.show()
-    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb)
+    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb, tools="pan,box_zoom,reset,save")
     palette = ['Green', 'Blue', 'Red', 'Black', 'Yellow']
     imdex = -1
     for name, data in grouped:
         imdex += 1
-        p.legend
         p.line(x=data['Years in Office'], y=data['Percent Change'], color=palette[imdex], legend=name)
+
     script, div = components(p)
     df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')
+    #flask_renderobj =
 
-    return render_template(html, script=script, div=div, table=df_htmltable)
+    return render_template('plotlocal.html', script=script, div=div, table=df_htmltable) # {'template':flask_renderobj, 'plot_frame':plotframe, 'input_frame':df1}

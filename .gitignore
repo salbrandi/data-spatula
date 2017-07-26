@@ -46,8 +46,6 @@ Thumbs.db
 
 # Python-generated files #
 ##########################
-*.pyc
-MANIFEST
 htmlcov
 *.egg-info
 __pycache__
@@ -79,5 +77,5 @@ patenv
 
 # other #
 #########
-patella/debug
 debug
+
