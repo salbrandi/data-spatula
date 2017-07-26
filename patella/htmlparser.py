@@ -24,6 +24,7 @@ plt.style.use('ggplot')
 !!! If multiple hrefs, list and let the user choose - fig 1 [*]
 !!! add http:// at the beginning if missing [*]
 ! be more flexible with format [*]
+!!! clean code - no redundant setting, remove cruft[*]
 '''
 
 '''Some useful data frame commands'''
@@ -44,7 +45,7 @@ def get_df_row(df, arg):  # Getter for entire rows of the Dataframe
 def get_df_cell(df, col, row):  # Getter for cells of the Dataframe
     return df.iloc[col, row]
 
-logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG) # create a logging/print function that does what i want
 fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
 fe_table = pd.read_html(fe_url, match='Vice-President', flavor='bs4', header=0, index_col=2, parse_dates=True)[0]
 fe_names = []
@@ -74,6 +75,15 @@ fe_table.set_index('year', drop=True, inplace=True)
 def get_fe():
     return(fe_table)
 
+def download_approved(ext):
+    approved_exts = ['.csv', '.tsv']
+    for item in approved_exts:
+        if ext is item:
+            return True
+        else:
+            return False
+
+
 def find_download_links(url, filetype, output_name, in_number=0, download=False, render_template=True):
 
     """
@@ -92,9 +102,10 @@ def find_download_links(url, filetype, output_name, in_number=0, download=False,
     link_list = []
     no_tags = ''
     ext_length = len(filetype)
+    extension = url[-ext_length:]
     if filetype == output_name[-ext_length:]:  # Format the file name so user input is flexible
         dl_name = output_name[:len(output_name)-ext_length]  # Can include file extension or none
-    if url[-ext_length:] == filetype:
+    if extension == filetype:
         link_list.append(url)  # Before anything, check if the url entered IS a dl link
         if download: # check if directory exists, check if file is parseable, check allowed file extensions
             urllib.request.urlretrieve(url, os.getcwd() + '/data/' + dl_name + filetype)

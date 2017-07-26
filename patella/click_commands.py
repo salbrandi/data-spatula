@@ -9,7 +9,8 @@ import os.path
 
 
 ''' \/ Local Packages \/ '''
-import htmlparser
+import patella.htmlparser
+import patella.flaskapp.app as flaskapp
 
 ''' \/ Variables \/ '''
 
@@ -86,7 +87,6 @@ def change_index(filename, column):
         file1.df.set_index(column)
     else:
         click.echo('no file found with that name')
-    pass
 
 
 @click.command()
@@ -94,6 +94,12 @@ def change_index(filename, column):
 @click.argument('file')
 def change_names(file, column_names):
     pass
+
+
+@click.command()
+@click.argument('path')
+def startserver(path):
+    flaskapp.startserver(path)
 
 
 @click.command()
@@ -118,3 +124,4 @@ patella.add_command(scrape_url, name='scrape')
 patella.add_command(testme, name='test')
 patella.add_command(plot)
 patella.add_command(load_data, name='load')
+patella.add_command(startserver, name='startup')

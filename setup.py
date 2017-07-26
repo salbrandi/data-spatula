@@ -6,7 +6,7 @@ setup(
     py_modules=['htmlparser'],
     entry_points='''
         [console_scripts]
-        patella=click_commands:patella
+        patella=patella.click_commands:patella
         ''',
 
 )

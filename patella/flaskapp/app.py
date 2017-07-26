@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, request
-import htmlparser
+import patella.htmlparser as htmlparser
 import pandas as pd
 import os
 
@@ -8,6 +8,8 @@ app = Flask(__name__)
 # DATA_DIR = os.environ('DATA_DIR')  # update the directory path to use env variables
 
 app.config['UPLOAD_FOLDER'] = 'uploads/'
+
+urlpath = 'patella'
 
 
 
@@ -35,7 +37,7 @@ TO-DO:
 
 
 
-@app.route('/patella/options', methods=['POST', 'GET'])
+@app.route('/' + urlpath + '/options', methods=['POST', 'GET'])
 def options():
     if request.method == 'POST':
         url = request.form['url']
@@ -45,7 +47,7 @@ def options():
         return render_template('options.html', result=result, ftype=filetype)
 
 
-@app.route('/patella/table', methods=['POST', 'GET'])
+@app.route('/' + urlpath + '/table', methods=['POST', 'GET'])
 def table():
     if request.method == 'POST':
         dlname = request.form['dlink']
@@ -61,7 +63,7 @@ test_data = ['https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
 'http://www.sample-videos.com/download-sample-csv.php']
 
 
-@app.route('/patella/plotlocal', methods=['POST', 'GET'])
+@app.route('/'+ urlpath + '/plotlocal', methods=['POST', 'GET'])
 def plotted():
     filename = ''
     url = ''
@@ -75,7 +77,7 @@ def plotted():
         df = pd.read_table(filepath, ',', header=0, engine='python')
         return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')#['template']  # Return compare() which returns a render_template() object
 
-@app.route('/patella/plot', methods=['POST', 'GET'])
+@app.route('/' + urlpath +' /plot', methods=['POST', 'GET'])
 def plot_from_df():
     if request.method == 'POST':
         data_column = request.form['datacol'] # get the data column from html form
@@ -85,5 +87,10 @@ def plot_from_df():
         return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')#['template'] # Return compare() which returns a render_template() object
 
 
-if __name__ == '__main__':
+def startserver(path):
+    urlpath = path
     app.run(debug=True, host='0.0.0.0', port=4444)
+
+
+if __name__ == '__main__':
+    startserver('patella')
