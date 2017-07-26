@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Url Scrape Results</title>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+    </head>
+
+    <body>
+      <form action="/patella/table" method="POST">
+          {% if result is defined and result %}
+              <p> Select a link: <p>
+            {% for key in result %}
+                <p><input type="radio" name="dlink" title ="Select the desired link" value= {{ key }}/> {{ key }} </p>
+            {% endfor %}
+            <p>Download File Name<br>   <input title="outname" type="text" name="outname" value= "datafile.csv"/></p>
+            <input type="submit" name="action" value="Download and Create Table"/>
+          {% else %}
+            <h3> ERROR: There were no {{ ftype }} links on that page :( </h3>
+          {% endif %}
+      </form>
+      <a href="/patella/input"> Go back </a>
+    </body>
+</html>

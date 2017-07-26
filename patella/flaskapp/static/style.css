@@ -1,0 +1,78 @@
+/* stylesheet */
+.dftable {
+  position: absolute;
+  left: 750px;
+}
+
+body {
+  /*
+  background-image: url("http://jansmriti.com/upload_img/3568about2.JPG");
+  backgrund-size: 100% 100%;
+  */
+  background-color: #6691d6;
+  color: #ffffff;
+  text-align: center;
+  font-family: "Verdana", sans-serif
+
+
+}
+
+#plot {
+  position: relative;
+  left: 750px;
+  /*bottom: 200px;*/
+}
+
+#header {
+  position: relative;
+  background-color: #eaeaea;
+  overflow:hidden;
+  line-height: 50px;
+  color: black;
+}
+
+#formdiv {
+  /*
+  background-color: #ccc
+*/
+}
+
+table {
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=text]:hover {
+    background-color: #ccc;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+a:hover {
+  font-weight:bold;
+  color: #ffffff;
+
+}
