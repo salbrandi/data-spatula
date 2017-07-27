@@ -6,7 +6,7 @@
     </head>
 
     <body>
-      <form action="/patella/table" method="POST">
+      <form action="/{{ var }}/table" method="POST">
           {% if result is defined and result %}
               <p> Select a link: <p>
             {% for key in result %}
@@ -18,6 +18,6 @@
             <h3> ERROR: There were no {{ ftype }} links on that page :( </h3>
           {% endif %}
       </form>
-      <a href="/patella/input"> Go back </a>
+      <a href="/{{ var }}/input"> Go back </a>
     </body>
 </html>

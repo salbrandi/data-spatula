@@ -9,7 +9,7 @@ import os.path
 
 
 ''' \/ Local Packages \/ '''
-import patella.htmlparser
+import patella.htmlparser as htmlparser
 import patella.flaskapp.app as flaskapp
 
 ''' \/ Variables \/ '''
@@ -117,6 +117,7 @@ def plot(file, col, title, x_title, y_title):
 @click.command()
 @click.argument('foo')
 def testme(foo):
+    htmlparser.download_approved('.csv', 'xd')
     pass
 
 
