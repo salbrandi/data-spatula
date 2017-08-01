@@ -3,6 +3,7 @@
 
 ''' \/ Third-Party Imports \/ '''
 from bokeh.plotting import figure, show
+from bokeh.palettes import Plasma256
 from bokeh.embed import components
 from flask import render_template
 from urllib.parse import urlparse
@@ -13,6 +14,7 @@ import urllib.request
 import logging
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+import datetime
 
 # Add problem you are trying to solve in DocString
 
@@ -45,7 +47,7 @@ def get_df_row(df, arg):   # Getter for entire rows of the Dataframe
 def get_df_cell(df, col, row):   # Getter for cells of the Dataframe
     return df.iloc[col, row]
 
-logging.basicConfig(filename='debug', level=logging.DEBUG)  # create a logging/print function for me
+logging.basicConfig(filename='debug', filemode='w', level=logging.DEBUG)  # create a logging/print function for me
 fe_url = 'http://www.enchantedlearning.com/history/us/pres/list.shtml'
 fe_table = pd.read_html(fe_url, match='Vice-President', flavor='bs4', header=0, index_col=2, parse_dates=True)[0]
 fe_names = []
@@ -89,16 +91,12 @@ def download_approved(ext, filep):
         filep.encode('utf-8').strip()
         pd.read_table(filep, delim, header=0, engine='python')
     except Exception as exc:
-        #logging.log(exc, 'logged', level='DEBUG')
-        print(exc)
+        logging.log(logging.DEBUG, msg=exc)
         problem = 'some'
     if problem == 'none':
         return True
     elif problem == 'some':
         return False
-
-
-
 
 
 def find_download_links(url, filetype, output_name, in_number=0, download=False, clobber=True):
@@ -140,7 +138,7 @@ def find_download_links(url, filetype, output_name, in_number=0, download=False,
             no_tags = link.get('href')
             logging.info(str(no_tags))
             if filetype == str(no_tags)[-ext_length:]:   # Check the three letter file extension
-                if 'http://' not in no_tags:   # If no first part of the url, add it
+                if 'http://' not in no_tags and 'https://' not in no_tags:   # If no first part of the url, add it
                     no_tags = domain + '/' + no_tags
                 link_list.append(no_tags)
         if download:
@@ -173,13 +171,11 @@ def find_download_links(url, filetype, output_name, in_number=0, download=False,
 
 def file_to_htmltable(filepath):
         dataframe = pd.read_table(filepath, ',', header=0, engine='python')
-        dataframe.set_index('Year', drop=True, inplace=True)
         htmltable = dataframe.to_html(bold_rows=True, escape=True)
         return htmltable
 
 
-def compare(df1, fedf, col, title, x_lb, y_lb, html='plotlocal.html', render=True):
-
+def compare(df1, fedf, col, title, x_lb, y_lb, year_col='Year', html='plotlocal.html', render=True):
     """
     :param df1: the first data frame to be compared.
     :param fedf: the second dataframe to be compared, always fe_list.
@@ -191,77 +187,45 @@ def compare(df1, fedf, col, title, x_lb, y_lb, html='plotlocal.html', render=Tru
     :return: a render_template object which sends a bokeh js/html/css plot to the page as well as a special div.
     """
 
-     #### V Some Global variables V  ####
+    #### V Some Global variables V  ####
     data_col = int(col)
-    df1.set_index('Year', drop=True, inplace=True)
+    df1.set_index(year_col, drop=True, inplace=True)
     ind_list = df1.index.get_level_values(0).values.tolist()
-    years_list = []
-    interval = 0
-    total_chg = []
-    cov_list = []
-    party_list = []
-    fe_list = []
     office_yr_list = []
     party_office_list = []
-    foo = 0
-    lowdiff = 100
     year_num = 1
     year_num_of = 1
-    interval = []
+    term_st_list = fedf.index.get_level_values(0)
+    totalfe_list = []
+    totalparty_list = []
     # populate a list with tuples of the year and the index where the year changes
     year_and_interval_list = [(i, ind_list[i-1]) for i, year in enumerate(ind_list) if i >=1 and ind_list[i-1] != ind_list[i]]
     interval = [tpl[0] for tpl in year_and_interval_list]
     years_list = [tpl[1] for tpl in year_and_interval_list]
-    '''for idx, item in enumerate(ind_list):    # loop through the index of the data frame
-        if idx >= 1 and ind_list[idx-1] != ind_list[idx]:     # After at least one loop (to avoid oob error) and if the index changes
-            years_list.append(ind_list[idx-1])  # append that value that changed
-            interval.append(idx)# set the interval
-    '''
-    print(interval)
-    print(years_list)
-
-    # total_chg = [(df1.iloc[interval[i-1], data_col] - df1.iloc[interval[i], data_col]) if interval[i] < len(ind_list) else (df1.iloc[interval[i-1], data_col] - df1.iloc[(len(ind_list) - interval[i-1]), data_col]) for i, item in enumerate(years_list) if i >=1]
-    # print(total_chg)
-
-    for idx, item in enumerate(years_list):  # loop through the list of years
-        begin = interval[idx-1]      # set the beginning of the years
-        if idx is 0: begin = 0
-        end = interval[idx]     # and the end
-        # print(begin)
-        # print(end)
-        if end < len(ind_list):
-            total_chg.append(df1.iloc[begin, data_col] - df1.iloc[end, data_col])  # calculate total change across the year
+    total_chg = [(df1.iloc[0, data_col]-df1.iloc[interval[i], data_col]) if i == 0
+                 else (df1.iloc[interval[i-1], data_col] - df1.iloc[interval[i], data_col]) if interval[i] < len(ind_list)
+                 else (df1.iloc[interval[i-1], data_col] - df1.iloc[(len(ind_list) - interval[i-1]), data_col])
+                 for i, item in enumerate(years_list)]
+    # A list of variation from year to year
+    cov_list = [total_chg[i]/total_chg[i-1]*100 if total_chg[i-1] != 0 else 0 for i, n in enumerate(years_list)]
+    for idx, item in enumerate(term_st_list):
+        dist = 0
+        if idx != len(term_st_list)-1:
+            dist = int(term_st_list[idx+1]) - int(item)
         else:
-            end = len(ind_list) - begin
-            total_chg.append(df1.iloc[begin, data_col] - df1.iloc[end, data_col])   # calculate total change across the year
-
-    for idx, item in enumerate(years_list):
-        cov = total_chg[idx]/total_chg[idx-1]*100  # calculate change from year to year
-        cov_list.append(cov)  # add it to a list for the dataframe
-    for idx, item in enumerate(fedf.index.get_level_values(0)):  # loop  through the fe_table
-        yr = int(item)
-        lowdiff = years_list[len(years_list) - 1] - foo
-        highdiff = years_list[0] - yr
-        print(lowdiff)
-        if idx >= 1:  # after one iteration
-            if yr > int(years_list[0]) and yr < int(years_list[len(years_list)-1]):  # if  the term year is inside the year list
-                print('gt one')
-                for val in range(yr-foo):
-                    party_list.append(fedf.iloc[idx, 1])  #
-                    fe_list.append(fedf.iloc[idx, 0])     # Add the relevant cells to the list for the df col
-                    print(party_list)
-                    print(item)
-            elif lowdiff < 8: # and lowdiff >= 0:  # if the starting year of the term is lower (but not 0 or negative)
-                print('gt two')
-                print(lowdiff)
-                for val in range(lowdiff):  # still get the rest
-                    party_list.append(fedf.iloc[idx-1, 1])  # and
-                    fe_list.append(fedf.iloc[idx-1, 0])     # Add the relevant cells
-                    print(party_list)
-                    print(item)
-        foo = yr
+            dist = datetime.datetime.now().year - int(item) + 1
+        for n in range(dist):
+            totalfe_list.append(fedf.iloc[idx, 0])
+            totalparty_list.append(fedf.iloc[idx, 1])
+    # A list of all years there have been presidents
+    us_years = [yr+int(term_st_list[0]) for yr in range(int(term_st_list[-1]) - int(term_st_list[0]))]
+    # A list of all the parties over every year of us presidency
+    party_list = [totalparty_list[i] for i, item in enumerate(us_years) for years in years_list if years == item]
+    # A list of all the fes over every year of us presidency
+    fe_list = [totalfe_list[i] for i, item in enumerate(us_years) for years in years_list if years == item]
 
     # Make the 'years in office' and 'party in office' lists
+    # list  comprehension possible?
     for idx, item in enumerate(fe_list):
         if idx >= 1 and fe_list[idx - 1] == fe_list[idx]:   # After at least one loop (to avoid oob error) and if the index doesnt change
             year_num += 1
@@ -274,19 +238,17 @@ def compare(df1, fedf, col, title, x_lb, y_lb, html='plotlocal.html', render=Tru
         else:
             year_num_of = 1
         party_office_list.append(year_num_of)   # append the year number
+
     plotframe = pd.DataFrame({'foo': []})
     plotframe['Total Change'] = total_chg
     plotframe['Percent Change'] = cov_list
     plotframe['Years'] = years_list
-    print(plotframe)
-    print(party_list)
     plotframe['Party'] = party_list
     plotframe['First Executive'] = fe_list
     plotframe['Years in Office'] = office_yr_list
     plotframe['Years Party in Office'] = party_office_list
     plotframe.set_index('foo', drop=True, inplace=True)
     plotframe.set_index('Years', drop=False, inplace=True)
-
     styles = ['r.-', 'bo-', 'y^-']
     fig, ax = plt.subplots(figsize=(15, 15))
     grouped = plotframe.groupby('First Executive')
@@ -294,14 +256,15 @@ def compare(df1, fedf, col, title, x_lb, y_lb, html='plotlocal.html', render=Tru
     plt.xlabel(x_lb)
     plt.ylabel(y_lb)
     ax.legend(grouped.groups.keys())
-    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb, tools="pan,box_zoom,reset,save")
-    palette = ['Green', 'Blue', 'Red', 'Black', 'Yellow']
+    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb, tools="pan,box_zoom,reset,save", toolbar_location='below', toolbar_sticky=False)
+    palette = Plasma256 #[val for val in Plasma256.values()]
     imdex = -1
     for name, data in grouped:
         imdex += 1
-        p.line(x=data['Years in Office'], y=data['Percent Change'], color=palette[imdex], legend=name)
+        p.line(x=data['Years in Office'], y=data['Percent Change'], color=palette[imdex*10], legend=name) #palette[imdex]
     script, div = components(p) # make a bokeh graph out of the plot
-    df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable') # convert the datframe to html for easy display
+    df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable') # convert the datframe to html for easy display\
+    show(p)
     if render:
         return render_template(html, script=script, div=div, table=df_htmltable)
     else:

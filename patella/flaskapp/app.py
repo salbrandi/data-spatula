@@ -59,10 +59,12 @@ def table(var):
         table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
         return render_template('table.html', linkname=dlname, table=table, var=var)#['template']
 
-test_data = ['https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
+test_data = [
+'https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
 'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python',
 'http://www.sample-videos.com/download-sample-csv.php',
-'http://www.ehp.qld.gov.au/data-sets/soe2015/indicator-4-2-0-4-1.csv']
+'http://www.ehp.qld.gov.au/data-sets/soe2015/indicator-4-2-0-4-1.csv',
+'https://vincentarelbundock.github.io/Rdatasets/datasets.html']
 
 
 @app.route('/<string:var>/plotlocal', methods=['POST', 'GET'])
@@ -79,12 +81,13 @@ def plotted(var):
 @app.route('/<string:var>/plot', methods=['POST', 'GET'])
 def plot_from_df(var):
     if request.method == 'POST':
-        result = request.form
+        result = request.form # store the form results as result
         data_column = result['datacol']  # get the data column from html form
+        year_column = result['yearcol'] # get the year column from the html form
         filepath = os.getcwd() + '/data/' + 'datafile.csv'
         if os.path.isfile(filepath):
             df = pd.read_table(filepath, ',', header=0, engine='python')
-            return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')  # Return compare() which returns a render_template() object
+            return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '', year_col=year_column)  # Return compare() which returns a render_template() object
         else:
             return render_template('input.html')
     
