@@ -33,8 +33,8 @@ def scraped(var):
 
 '''
 TO-DO:
-1. Turn the Input boxes into variables in both files for easier upkeep
-2. Before displaying graph, redirect to options page with table - axis labes, graph title, data columns, etc
+1. Turn the Input boxes into variables in both files for easier upkeep [~]
+2. Before displaying graph, redirect to options page with table - axis labes, graph title, data columns, etc [*]
 '''
 
 
@@ -61,13 +61,6 @@ def table(var):
         parseobj = htmlparser.find_download_links(dlname[:-1], '.csv', outname, download=True)
         table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
         return render_template('table.html', linkname=dlname, table=table, var=var)#['template']
-
-test_data = [
-'https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
-'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flaskella-for-python',
-'http://www.sample-videos.com/download-sample-csv.php',
-'http://www.ehp.qld.gov.au/data-sets/soe2015/indicator-4-2-0-4-1.csv',
-'https://vincentarelbundock.github.io/Rdatasets/datasets.html']
 
 
 @app.route('/<string:var>/plotlocal', methods=['POST', 'GET'])

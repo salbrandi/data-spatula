@@ -1,2 +1,6 @@
 https://www.fs.fed.us/about-agency/budget-performance
 http://www.enchantedlearning.com/history/us/pres/list.shtml
+https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv
+http://www.sample-videos.com/download-sample-csv.php
+http://www.ehp.qld.gov.au/data-sets/soe2015/indicator-4-2-0-4-1.csv
+https://vincentarelbundock.github.io/Rdatasets/datasets.html
