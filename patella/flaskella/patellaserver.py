@@ -16,6 +16,7 @@ def startserver(path):
     app.run(debug=True, host='0.0.0.0', port=4444)
 
 @app.route('/')
+@app.route('/index')
 def index():
     return render_template('index.html', name=urlpath)
 
