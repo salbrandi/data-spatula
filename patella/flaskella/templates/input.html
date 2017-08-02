@@ -19,11 +19,9 @@
         <form action="/{{ var }}/options" method="POST" style="display:inline-block;margin:50px;"> <!--convert this to the addr of the site-->
             <p>Data Scrape URL<br>   <input title="url" type="text" name="url" value=""/></p>
             <p>Filetype (.csv, .tsv)<br>   <input title="filetype" type="text" name="filetype" value=".csv"/></p>
-            <!--<p>Date Column   <input title="datacol" type="text" name = "datacol" /></p>-->
-            <!--<p>Local File   <input title="local" type="file" name="local" /></p>-->
             <p><input type="submit" name="action" value="Scrape URL for Data" /></p>
         </form>
-        <form action="/{{ var }}/plotlocal" method="POST" style="display:inline-block;">
+        <form action="/{{ var }}/plotlocal" method="POST" style="display:inline-block;margin:50px;">
           <p> Local Filepath (testing purposes, more functional later)<br> <input type="text" name="filepath" value="/home/sbrandi/Desktop/patella/patella/data/indicator-4-2-0-4-1.transfer"/></p>
           <p> Date column number in data<br> <input type="text" name="datacol" value="3"/></p>
           <input type="submit" name="action" value="Read File"/>

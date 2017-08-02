@@ -8,11 +8,14 @@
     <title> COVFEFE Graph </title>
   </head>
   <body>
+  <div class="pageContentWrapper">
     <div class=page>
       <h1 style="position:relative">Your Graph!</h1>
       <p id=plot>This plot was Generated using this table: {{ table | safe }}</p>
-      {{ script | safe }}
+      <span style="display:inline-block">{{ script | safe }}</span>
       {{ div | safe}}
     </div>
+  </div>
+  <div class="footer"><a href="/{{ var }}/input"> Go back </a></div>
   </body>
 </html>

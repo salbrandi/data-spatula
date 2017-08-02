@@ -44,3 +44,4 @@ plt.gcf().subplots_adjust(bottom=0.5)
 plt.ylabel('Thousands of Dollars (USD)')
 plt.show()
 plt.savefig('NationalForestServiceBudget' + str(yr) + ".svg", format="svg")
+

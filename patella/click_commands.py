@@ -10,7 +10,7 @@ import os.path
 
 ''' \/ Local Packages \/ '''
 import patella.htmlparser as htmlparser
-import patella.flaskapp.app as flaskapp
+import patella.flaskella.patellaserver as flaskapp
 
 ''' \/ Variables \/ '''
 

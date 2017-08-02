@@ -45,7 +45,10 @@ def options(var):
         filetype = request.form['filetype']
         parseobj = htmlparser.find_download_links(url, filetype, 'datafile.csv', download=False)
         result = parseobj['href_list']
-        return render_template('options.html', result=result, ftype=filetype, var=var)
+        prompt = 'Choose a link to download:'
+        button = 'Download and Create Table'
+        filename = 'Name of downloaded file'
+        return render_template('options.html', result=result, ftype=filetype, var=var, prompt=prompt, button=button, filename=filename)
 
 
 @app.route('/<string:var>/table', methods=['POST', 'GET'])
@@ -55,13 +58,12 @@ def table(var):
         outname = request.form['outname']
         print(outname)
         parseobj = htmlparser.find_download_links(dlname[:-1], '.csv', outname, download=True)
-        print('got here')
         table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
         return render_template('table.html', linkname=dlname, table=table, var=var)#['template']
 
 test_data = [
 'https://data.cityofnewyork.us/api/views/5t4n-d72c/rows.csv',
-'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flask-for-python',
+'http://code.runnable.com/UiPcaBXaxGNYAAAL/how-to-upload-a-file-to-the-server-in-flaskella-for-python',
 'http://www.sample-videos.com/download-sample-csv.php',
 'http://www.ehp.qld.gov.au/data-sets/soe2015/indicator-4-2-0-4-1.csv',
 'https://vincentarelbundock.github.io/Rdatasets/datasets.html']
@@ -76,7 +78,7 @@ def plotted(var):
         filename = result['filepath']
         filepath = filename
         df = pd.read_table(filepath, ',', header=0, engine='python')
-        return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '')  # Return compare() which returns a render_template() object
+        return htmlparser.compare(df, data_column, '', '', '', urlth=var)  # Return compare() which returns a render_template() object
 
 @app.route('/<string:var>/plot', methods=['POST', 'GET'])
 def plot_from_df(var):
@@ -87,13 +89,10 @@ def plot_from_df(var):
         filepath = os.getcwd() + '/data/' + 'datafile.csv'
         if os.path.isfile(filepath):
             df = pd.read_table(filepath, ',', header=0, engine='python')
-            return htmlparser.compare(df, htmlparser.get_fe(), data_column, '', '', '', year_col=year_column)  # Return compare() which returns a render_template() object
+            return htmlparser.compare(df, data_column, '', '', '', year_col=year_column, urlth=var)  # Return compare() which returns a render_template() object
         else:
             return render_template('input.html')
     
 
-
-
-
-# if __name__ == '__main__':
-#    startserver('patella')
+if __name__ == '__main__':
+    startserver('patella')
