@@ -1,3 +1,3 @@
-import patella.flaskella.patellaserver as server
+import patella.patellaserver as server
 
 server.startserver('patella')

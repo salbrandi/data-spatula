@@ -12,6 +12,7 @@ certifi==2017.4.17        # via requests
 chardet==3.0.4            # via requests
 click==6.7
 cycler==0.10.0            # via matplotlib
+dateparser==0.6.0
 flask==0.12.2
 html5lib==0.999999999
 idna==2.5                 # via requests
@@ -22,12 +23,15 @@ matplotlib==2.0.2
 numpy==1.13.1             # via bkcharts, bokeh, matplotlib, pandas
 pandas==0.20.3
 pyparsing==2.2.0          # via matplotlib
-python-dateutil==2.6.1    # via bokeh, matplotlib, pandas
-pytz==2017.2              # via matplotlib, pandas
+python-dateutil==2.6.1    # via bokeh, dateparser, matplotlib, pandas
+pytz==2017.2              # via dateparser, matplotlib, pandas, tzlocal
 pyyaml==3.12              # via bokeh
+regex==2017.7.28          # via dateparser
 requests==2.18.2          # via bokeh
+ruamel.yaml==0.15.23      # via dateparser
 six==1.10.0               # via bkcharts, bokeh, cycler, html5lib, matplotlib, python-dateutil
 tornado==4.5.1            # via bokeh
+tzlocal==1.4              # via dateparser
 urllib3==1.22             # via requests
 webencodings==0.5.1       # via html5lib
 werkzeug==0.12.2          # via flask

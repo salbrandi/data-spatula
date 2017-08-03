@@ -14,6 +14,11 @@
                 A resource that allows you to compare the variation across years in
                 data sets to the political parties that were in power those years
               </h4>
+              {% if error is defined and error %}
+                <h5>Sorry, there has been an error:</h5>
+                <p> {{ error }} </p>
+                <p> Your data was probably incompatible, or the date and data columns were entered incorrectly. Please try again </p>
+              {% endif %}
             </div>
 
             <div id="formdiv" title="Enter your data!">
@@ -24,7 +29,7 @@
             </form>
             <form action="/{{ var }}/plotlocal" method="POST" style="display:inline-block;margin:50px;">
               <p> Local Filepath (testing purposes, more functional later)<br> <input type="text" name="filepath" value="/home/sbrandi/Desktop/patella/patella/data/indicator-4-2-0-4-1.transfer"/></p>
-              <p> Date column number in data<br> <input type="text" name="datacol" value="3"/></p>
+              <p> Data column number in data<br> <input type="text" name="datacol" value="3"/></p>
               <input type="submit" name="action" value="Read File"/>
             </form>
           </div>

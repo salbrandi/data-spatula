@@ -1,41 +1,38 @@
 # -*- coding: utf-8 -*-
-"""Controls command line operations"""
+"""
+Controls command line operations
+
+The only particularly relevant command now i:  patella startup <path>
+
+not all commands retain functionality - this will be updated eventually (read: it might not be)
+
+"""
 
 ''' \/ Third-Party Packages \/ '''
-import click
-import pandas as pd
-import os, sys
+import os
 import os.path
 
+import click
+import pandas as pd
 
 ''' \/ Local Packages \/ '''
 import patella.htmlparser as htmlparser
-import patella.flaskella.patellaserver as flaskapp
-
-''' \/ Variables \/ '''
+import patella.patellaserver as flaskapp
 
 
-'''Class test'''
-class fileo():
+class fileo:
     pass
 file1 = fileo()
 file2 = fileo()
-file1.df = file2.df = pd.DataFrame({'foo' : []})
+file1.df = file2.df = pd.DataFrame({'foo': []})
 file1.path = file2.path = ''
 file1.name = file2.name = ''
-''''''
-
-''' TO DO
-Check for invalid file type (also check if it's a string)
-Make function for setting both data frames at once - improves readability.
-Add downloaded file names and paths to a text file for easy retrieval
-Update load() method to save the files names to a text file that the other functions auto load - clobber each time
-'''
 
 
 @click.group()
 def patella():
     pass
+
 
 @click.command()
 @click.argument('url')
@@ -58,7 +55,7 @@ def load_data(file_one, delimiters):
     # file2.path = os.getcwd() + '/' + file_two
     # print(file1.path + ', ' + file2.path)
 
-    if os.path.exists(file1.path): # and os.path.exists(file2.path):
+    if os.path.exists(file1.path):  # and os.path.exists(file2.path):
         file1.name = file_one
         list_delims = delimiters.split(':')
         if len(list_delims) == 2:
@@ -76,7 +73,6 @@ def load_data(file_one, delimiters):
             click.echo('no files found with the name ' + file_one + ' in path ' + file1.path)
         # if not os.path.exists(file2.path):
             # click.echo('no files found with the name ' + file_two + ' in path ' + file1.path)
-
 
 
 @click.command()
@@ -114,13 +110,13 @@ def plot(file, col, title, x_title, y_title):
     htmlparser.compare(file1.df, htmlparser.get_fe(), col, title, x_title, y_title)
 
 
+# A test cli command
 @click.command()
 @click.argument('foo')
 def testme(foo):
-    htmlparser.download_approved('.csv', 'xd')
     pass
 
-
+# add all the subcommands to the patella group
 patella.add_command(scrape_url, name='scrape')
 patella.add_command(testme, name='test')
 patella.add_command(plot)
