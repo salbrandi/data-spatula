@@ -12,7 +12,7 @@ htmlparser.compare(): this function is used to compare some data frame with a da
 """
 
 '''\/ Local Imports \/'''
-from patella.tablereader import get_fe
+from .tablereader import get_fe
 
 ''' \/ Third-Party Imports \/ '''
 from bokeh.plotting import figure
@@ -48,9 +48,10 @@ def prlog(msg, log=True, prnt=False, level='ERROR'):
         logging.error(msg)
 
 
-# A function that returns true if the file extension is correct AND the file is readable
+
 def download_approved(ext, filep):
     """
+    A function that returns true if the file extension is correct AND the file is readable
     :param ext: the expected file extension of the file
     :param filep: the filepath of the file
     :return: True if approved, False if not
@@ -78,15 +79,19 @@ def download_approved(ext, filep):
         return False
 
 
-# a function which defines the previous elemenet in a list - makes the code more readable\
+
 def previous_element(_list, index):
+    """
+    A function which defines the previous elemenet in a list - makes the code more readable
+    """
     return _list[index-1]
 
 
-# A function which looks around webpages for html tables and .csv/.tsv download links and downloads them.
+
 def find_download_links(url, filetype, output_name, in_number=0, download=False, clobber=True):
 
     """
+    # A function which looks around webpages for html tables and .csv/.tsv download links and downloads them.
     :param url: url to be scraped
     :param filetype: filetype to look for in the scraped url
     :param output_name: name of the file to be downloaded
@@ -156,16 +161,21 @@ def find_download_links(url, filetype, output_name, in_number=0, download=False,
     return {'error': error, 'download_name': dl_name, 'href_list': link_list}
 
 
-# simple function to take a file from a file path and generate an html table
+
 def file_to_htmltable(filepath, delim=','):
+    """
+    simple function to take a file from a file path and generate an html table
+    :return: html table script as 'htmltable' variable
+    """
     dataframe = pd.read_table(filepath, delim, header=0, engine='python')
     htmltable = dataframe.to_html(bold_rows=True, escape=True)
     return htmltable
 
 
-# A function that takes a dataframe for input and compares it to the change by year as a political party held power
+
 def compare(df1, col, title, x_lb, y_lb, fedf=get_fe(), year_col='Year', html='plotlocal.html', render=True, urlth='patella'):
     """
+    A function that takes a dataframe for input and compares it to the change by year as a political party held power
     :param df1: the first data frame to be compared.
     :param fedf: the second dataframe to be compared, always fe_list.
     :param col: the data column of the first data frame which holds the dates needed to be compared.
@@ -179,7 +189,6 @@ def compare(df1, col, title, x_lb, y_lb, fedf=get_fe(), year_col='Year', html='p
     :return: a render_template object which sends a bokeh js/html/css plot to the page as well as a special div.
     """
 
-    ''' V Some Global variables V  '''
     data_col = int(col)-1  # subtract 1 from it so the column counting starts from one in the input
     df1.set_index(year_col, drop=True, inplace=True) # if year_col and type(year_col) is "string" else prlog('year col not string')
     ind_list = [parse(str(int(x))).year for x in df1.index.get_level_values(0).values.tolist()]

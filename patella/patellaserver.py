@@ -30,8 +30,11 @@ Every html table has a footer with a link which routes back to /input, while /in
 """
 
 
+'''Local Imports'''
+from . import htmlparser as htmlparser
+
+'''Third Party Imports'''
 from flask import Flask, render_template, request
-import patella.htmlparser as htmlparser
 import pandas as pd
 import os
 

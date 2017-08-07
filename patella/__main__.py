@@ -1,3 +1,3 @@
-import patella.patellaserver as server
+from . import patellaserver as server
 
 server.startserver('patella')

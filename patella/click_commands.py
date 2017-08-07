@@ -16,14 +16,14 @@ import click
 import pandas as pd
 
 ''' \/ Local Packages \/ '''
-import patella.htmlparser as htmlparser
-import patella.patellaserver as flaskapp
+from . import htmlparser as htmlparser
+from . import patellaserver as flaskapp
 
 
-class fileo:
+class filec:
     pass
-file1 = fileo()
-file2 = fileo()
+file1 = filec()
+file2 = filec()
 file1.df = file2.df = pd.DataFrame({'foo': []})
 file1.path = file2.path = ''
 file1.name = file2.name = ''
@@ -39,40 +39,28 @@ def patella():
 @click.option('--filename', default='datafile', help='specify the name of the local file that will be downloaded to the current directory')
 @click.option('--filetype', default='.csv', help='specify the file type the scraper will look for')
 def scrape_url(url, filetype, filename):
-    # htmlparser.find_download_links(url, filetype, filename)
     parseobj = htmlparser.find_download_links(url, filetype, filename, download=True)
     if type(parseobj) != 'NoneType':
         click.echo('ERROR: ' + parseobj['error'])  # Error reporting
 
 
-# In webservice: Give index and relevant data options
 @click.command()
 @click.argument('file_one')
-# @click.argument('file_two')
 @click.option('--delimiters', default=',:,', help='Specify file type delimiters in format <DELIM>:<DELIM2>')
 def load_data(file_one, delimiters):
     file1.path = os.getcwd() + '/' + file_one
-    # file2.path = os.getcwd() + '/' + file_two
-    # print(file1.path + ', ' + file2.path)
-
-    if os.path.exists(file1.path):  # and os.path.exists(file2.path):
+    if os.path.exists(file1.path):
         file1.name = file_one
         list_delims = delimiters.split(':')
         if len(list_delims) == 2:
             file1.df = pd.read_table(file1.path, list_delims[0], header=0)
             file2.df = htmlparser.get_fe()
             os.environ['LOCAL_FILE_PATH'] = file1.path
-            # file2.df = pd.read_table(file2.path, list_delims[1])
-            # click.echo(file1.name + ' table: ' + str(file1.df))
-            # click.echo(file2.name + ' table: ' + str(file2.df))
             click.echo('file successfully loaded into Dataframes')
-        # elif len(list_delims) > 2:
-            # click.echo('too many arguments in list for option: --delimiters')
     else:
         if not os.path.exists(file1.path):
             click.echo('no files found with the name ' + file_one + ' in path ' + file1.path)
-        # if not os.path.exists(file2.path):
-            # click.echo('no files found with the name ' + file_two + ' in path ' + file1.path)
+
 
 
 @click.command()
