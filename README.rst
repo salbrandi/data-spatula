@@ -45,4 +45,4 @@ and post requests and debugger pins. POST and GET logs are timestamped, but othe
 Data Files
 ++++++++++
 Data files from the webservice will be downloaded to a ``data/`` directory created at runtime in the directory the
-server is started from. In that directory, all files downloaded from teh webservice will be browseable.
+server is started from. In that directory, all files downloaded from the webservice will be browseable.
