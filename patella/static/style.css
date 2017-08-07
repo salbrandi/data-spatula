@@ -2,6 +2,8 @@
 .dftable {
   position: absolute;
   left: 750px;
+  margin: 50px;
+  display:inline-block
 }
 
 body {
@@ -51,6 +53,7 @@ li {
     left: 400px;
     display: inline-block;
     text-align:center;
+
 }
 
 #header {

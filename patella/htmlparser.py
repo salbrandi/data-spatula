@@ -15,7 +15,7 @@ htmlparser.compare(): this function is used to compare some data frame with a da
 from .tablereader import get_fe
 
 ''' \/ Third-Party Imports \/ '''
-from bokeh.plotting import figure
+from bokeh import plotting
 import bokeh.palettes as palettes
 from bokeh.embed import components
 from flask import render_template
@@ -173,7 +173,13 @@ def file_to_htmltable(filepath, delim=','):
 
 
 
-def compare(df1, col, title, x_lb, y_lb, fedf=get_fe(), year_col='Year', html='plotlocal.html', render=True, urlth='patella'):
+def compare(df1, col, title, x_lb, y_lb,
+            fedf=get_fe(),
+            year_col='Year',
+            html='plotlocal.html',
+            render=True,
+            urlth='patella'
+            ):
     """
     A function that takes a dataframe for input and compares it to the change by year as a political party held power
     :param df1: the first data frame to be compared.
@@ -214,8 +220,8 @@ def compare(df1, col, title, x_lb, y_lb, fedf=get_fe(), year_col='Year', html='p
 
     # A list of variation from year to year, created by dividing the list at index by the previous element,
     # then multiplying by 100 to get a percentage value.
-    cov_list = [total_chg[i]/previous_element(total_chg, i)*100 if previous_element(total_chg, i) != 0
-                else 0 for i, n in enumerate(years_list)]
+    cov_list = [total_chg[i]/df1.iloc[interval[i], data_col]*100 if previous_element(total_chg, i) != 0
+                else total_chg[i] for i, n in enumerate(years_list)]
 
     # Create lists of all the parties and years over all the us years by finding the distance from from the first
     # presidential term served to the last and appending incremented years in that range to the totalfe totalparty lists
@@ -259,23 +265,39 @@ def compare(df1, col, title, x_lb, y_lb, fedf=get_fe(), year_col='Year', html='p
     plotframe['Years in Office'] = office_yr_list
     plotframe['Years Party in Office'] = party_office_list
     plotframe.set_index('foo', drop=True, inplace=True)  # remove stock column in a roundabout way
-    plotframe.set_index('Years', drop=False, inplace=True)  # remove the year column and set as index
+    plotframe.set_index('Years', drop=True, inplace=True)  # remove the year column and set as index
     grouped = plotframe.groupby('First Executive')
 
     # ''' Bokeh Plot ''' ''' -- soon to be converted to Plotly Javascript --
-    p = figure(title=title, x_axis_label=x_lb, y_axis_label=y_lb, tools="pan,box_zoom,reset,save", toolbar_location='below', toolbar_sticky=False)
+    p = plotting.figure(title=title,
+               x_axis_label=x_lb,
+               y_axis_label='Percent Change in ' + y_lb,
+               tools="pan,box_zoom,reset,save",
+               toolbar_location='below',
+               toolbar_sticky=False,
+               plot_height= 800,
+               plot_width= 800
+
+               )
     # use the plasma palette from bokeh using the number of lines in the figure to create a palette from plasma256
     palette = [palettes.viridis(len(grouped))[i] for i, _ in enumerate(grouped)]
     for idx, (name, data) in enumerate(grouped):
-        p.line(x=data['Years in Office'], y=data['Percent Change'], color=palette[idx], legend=name)
+        p.line(x=data['Years in Office'],
+               y=data['Percent Change'],
+               color=palette[idx],
+               legend=name,
+               )
+    p.background_fill_color = "LightGrey"
     script, div = components(p)  # split the graph into JSON/JS components script and div
     # '''            ''' ''' -- soon to be converted to Plotly Javascript --
 
-    # convert the datframe to html for easy display\
+    # convert the datframe to html for easy display
     df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')
     if render:
         # If rendering, display the web page
+        plotting.show(p)
         return render_template(html, script=script, div=div, table=df_htmltable, var=urlth)
+
     else:
         # otherwise, return the result dataframe and the input dataframe
         return {'plotframe': plotframe, 'input_frame': df1}

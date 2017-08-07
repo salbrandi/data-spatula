@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
@@ -8,7 +8,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='patella',
-    packages=['patella'],
+    packages=find_packages(),
     version='0.1.7',
     author='Salvador Brandi',
     author_email='salbrandi@gmail.com',
@@ -19,7 +19,7 @@ setup(
     long_description=long_description,
     entry_points='''
         [console_scripts]
-        patella=click_commands:patella
+        patella=patella.click_commands:patella
         ''',
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -13,8 +13,10 @@
             {{ table | safe }}
             <div title="Enter your data!">
                 <form action="/{{ var }}/plot" method="POST" style="display:inline-block;margin:50px;"> <!--convert this to the addr of the site-->
-                    <p>Data Column   <input title="datacol" type="text" name="datacol" /></p>
-                    <p>Years Column Name <input title="yrcol" type="text" name="yearcol" value="Year"/></p>
+                    <p>Data Column   <input title="Data Column" type="text" name="datacol" /></p>
+                    <p>Years Column Name <input title="Year Column" type="text" name="yearcol" value="Year" /></p>
+                    <p>Percent Change in:  <input title="Y Label" type="text" name="ylab" /></p>
+                    <p>X label <input title="X Axis Label" type="text" name="xlab" value="Number of Years Party in Office" /></p>
                     <p><input type="submit" name="action" value="Graph vs First Executives" /></p>
                 </form>
             </div>

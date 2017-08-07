@@ -23,6 +23,8 @@ table.html: table is the page which displays the table  generated from the previ
             form 1:
                 text field 1: name = datacol, POSTs data column to be used
                 text field 2: name = yrcol, POSTs the date column to be used
+                text field 3: name = xlab, POSTs the X-axis label to be used
+                text field 4: name = ylab, POSTs the Y-Axis label to be used
 plotlocal.html: plotlocal is the page which actually displays the plot. it has no forms, just the bokeh js plot
                 components along with the table used to generate it
 
@@ -41,7 +43,8 @@ import pathlib
 
 app = Flask(__name__)
 
-os.makedirs("data")
+if os.path.isdir(os.getcwd().join('data')):
+    os.makedirs("data")
 
 app.config['UPLOAD_FOLDER'] = 'data/'
 x_axis_label = ''
@@ -49,28 +52,40 @@ y_axis_label = ''
 title = ''
 urlpath = 'patella'
 
-# A simple function for starting the webservice with varying url prefixes
+
 def startserver(path):
+    """
+    A simple function for starting the webservice with varying url prefixes
+    """
     global urlpath
     urlpath = path
     app.run(debug=True, host='0.0.0.0', port=4444)
 
 
-# The 'home' page route
+
 @app.route('/')
 @app.route('/index')
 def index():
+    """
+    The 'home' page route
+    """
     return render_template('index.html', name=urlpath)
 
-# the input route for inputting urls and files
+
 @app.route('/<string:var>/input', methods =['POST', 'GET'])
 def flask_scrape(var):
+    """
+    The input route for inputting urls and files
+    """
     return render_template('input.html', var=var)
 
 
-# the route which allows users to pick which link they would like to download
+
 @app.route('/<string:var>/options', methods=['POST', 'GET'])
 def options(var):
+    """
+    The route which allows users to pick which link they would like to download
+    """
     if request.method == 'POST':
         url = request.form['url']
         filetype = request.form['filetype']
@@ -94,10 +109,13 @@ def options(var):
 
 
 
-# the route for the options page, which allows users to specify data and time columns
-# needs to be updated to allow title, x, and y axis labels to be input - a project from some jquery/js/node.js
+
 @app.route('/<string:var>/table', methods=['POST', 'GET'])
 def table(var):
+    """
+    The route for the options page, which allows users to specify data and time columns
+    Needs to be updated to allow title, x, and y axis labels to be input - a project from some jquery/js/node.js
+    """
     if request.method == 'POST':
         dlname = request.form['dlink']
         outname = request.form['outname']
@@ -106,33 +124,30 @@ def table(var):
         table = htmlparser.file_to_htmltable(os.getcwd() + '/data/' + outname)
         return render_template('table.html', linkname=dlname, table=table, var=var)#['template']
 
-# the route whuch rediracts to the page which plots files from a specified path from the input page
-@app.route('/<string:var>/plotlocal', methods=['POST', 'GET'])
-def plotted(var):
-    if request.method == 'POST':
-        data_column = request.form['datacol']   # Get the data column input from html form
-        result = request.form
-        filename = result['filepath']
-        filepath = filename
-        df = pd.read_table(filepath, ',', header=0, engine='python')
-        return htmlparser.compare(df, data_column, x_axis_label, y_axis_label, title, year_col='Year',
-                                  urlth=var)  # Return compare() which returns a render_template() object
 
-
-# the route which links to /table - the final graph you get when the entire process is completed
 @app.route('/<string:var>/plot', methods=['POST', 'GET'])
 def plot_from_df(var):
+    """
+    The route which links to /table - the final graph you get when the entire process is completed
+    """
     error = 'Sorry, an error has occured, and were not sure what is is (>T-T<)'
     if request.method == 'POST':
         result = request.form # store the form results as result
         data_column = result['datacol']  # get the data column from html form
         year_column = result['yearcol'] # get the year column from the html form
+        x_axis_label = result['xlab']
+        y_axis_label = result['ylab']
         filepath = os.getcwd() + '/data/' + 'datafile.csv'
         if os.path.isfile(filepath):
             try:
                 df = pd.read_table(filepath, ',', header=0, engine='python')
-                return htmlparser.compare(df, data_column, x_axis_label, y_axis_label, title, year_col=year_column,
-                                      urlth=var)  # Return compare() which returns a render_template() object
+                return htmlparser.compare(df,
+                                          data_column,
+                                          y_axis_label + ' vs ' + x_axis_label,
+                                          x_axis_label,
+                                          y_axis_label,
+                                          year_col=year_column,
+                                          urlth=var)  # Return compare() which returns a render_template() object
             except Exception as exc:
                 error = exc
                 htmlparser.prlog(error)
@@ -142,5 +157,7 @@ def plot_from_df(var):
             return render_template('input.html', error=error, var=var)
     
 
+# If run directly, start the server
 if __name__ == '__main__':
+
     startserver(urlpath)

@@ -10,13 +10,13 @@
     <body>
         <div class="pageContentWrapper">
           <form action="/{{ var }}/table" method="POST">
+              <p>{{ filename }}<br>   <input title="outname" type="text" name="outname" value= "datafile.csv"/></p>
+                <input type="submit" name="action" value={{ button }}/>
               {% if result is defined and result %}
                   <p>{{ prompt }}<p>
                 {% for key in result %}
                     <p><input type="radio" name="dlink" title ="Select the desired link" value= {{ key }}/> {{ key }} </p>
                 {% endfor %}
-                <p>{{ filename }}<br>   <input title="outname" type="text" name="outname" value= "datafile.csv"/></p>
-                <input type="submit" name="action" value={{ button }}/>
               {% else %}
                 <h3> ERROR: There were no {{ ftype }} links on that page :( </h3>
               {% endif %}
