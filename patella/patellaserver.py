@@ -37,8 +37,11 @@ from . import htmlparser as htmlparser
 from flask import Flask, render_template, request
 import pandas as pd
 import os
+import pathlib
 
 app = Flask(__name__)
+
+os.makedirs("data")
 
 app.config['UPLOAD_FOLDER'] = 'data/'
 x_axis_label = ''

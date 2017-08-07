@@ -11,7 +11,7 @@ Flask Url Paths
 ---------------
 
 ``patella`` uses the  http ``GET`` and ``POST`` commands to send data between
-one page and another. The homepage is ``/`` and ``/index``, from which you can
+one page and another. The homepage paths are ``/`` and ``/index``, from which you can
 navigate to the rest of the front end.
 
 
@@ -27,12 +27,22 @@ file that comes with the package specifies its dependencies. Install these with
 so as not to interfere with previous installations.
 
 To start the flask server, run ``patella startup <URL>``, where URL is the path
-to be prepended to the page url. Next, use a browser to browse to
-``127.0.0.1:4444`` and begin using the webservice.
+to be prepended to the page url. Next, use a browser to browse to ``127.0.0.1:4444``.
+To access the service from other computers on the same network, use the public ip of the host
+computer on port 4444. From these two adresses thewebservice can be accessed as long as the server is running.
 
 
 Files
 -----
 
-Log files
-Data files
+Log Files
++++++++++
+A log file will be generated in the path that you run the webservice from named
+``webservice.log``. this file includes server reloads, error reporting, logs get
+and post requests and debugger pins. POST and GET logs are timestamped, but others are not
+
+
+Data Files
+++++++++++
+Data files from the webservice will be downloaded to a ``data/`` directory created at runtime.
+From here, you can look at all the files downloaded over the course of the webservice being run.
