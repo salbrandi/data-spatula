@@ -44,5 +44,5 @@ and post requests and debugger pins. POST and GET logs are timestamped, but othe
 
 Data Files
 ++++++++++
-Data files from the webservice will be downloaded to a ``data/`` directory created at runtime.
-From here, you can look at all the files downloaded over the course of the webservice being run.
+Data files from the webservice will be downloaded to a ``data/`` directory created at runtime in the directory the
+server is started from. In that directory, all files downloaded from teh webservice will be browseable.
