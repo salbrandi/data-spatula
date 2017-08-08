@@ -137,7 +137,7 @@ def plot_from_df(var):
                 df = pd.read_table(filepath, ',', header=0, engine='python')
                 return htmlparser.compare(df,
                                           data_column,
-                                          y_axis_label + ' vs ' + x_axis_label,
+                                          'Percent Change in ' + y_axis_label + ' vs ' + x_axis_label,
                                           x_axis_label,
                                           y_axis_label,
                                           year_col=year_column,
