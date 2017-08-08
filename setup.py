@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='patella',
     packages=find_packages(),
-    version='0.1.9',
+    version='0.1.10',
     author='Salvador Brandi',
     author_email='salbrandi@gmail.com',
     url='https://github.com/salbrandi/patella',
