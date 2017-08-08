@@ -8,14 +8,14 @@ not all commands retain functionality - this will be updated eventually (read: i
 
 """
 
-''' \/ Third-Party Packages \/ '''
+# \/ Third-Party Packages \/
 import os
 import os.path
 
 import click
 import pandas as pd
 
-''' \/ Local Packages \/ '''
+# \/ Local Packages \/
 from . import htmlparser as htmlparser
 from . import patellaserver as flaskapp
 

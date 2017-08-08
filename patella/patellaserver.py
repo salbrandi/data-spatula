@@ -32,10 +32,10 @@ Every html table has a footer with a link which routes back to /input, while /in
 """
 
 
-'''Local Imports'''
+# Local Imports
 from . import htmlparser as htmlparser
 
-'''Third Party Imports'''
+# Third Party Imports
 from flask import Flask, render_template, request
 import pandas as pd
 import os
@@ -54,8 +54,7 @@ urlpath = 'patella'
 
 
 def startserver(path):
-    """
-    A simple function for starting the webservice with varying url prefixes
+    """starts the webservice with specified prefix
     """
     global urlpath
     urlpath = path
@@ -66,8 +65,7 @@ def startserver(path):
 @app.route('/')
 @app.route('/index')
 def index():
-    """
-    The 'home' page route
+    """The 'home' page route
     """
     return render_template('index.html', name=urlpath)
 
@@ -83,8 +81,7 @@ def flask_scrape(var):
 
 @app.route('/<string:var>/options', methods=['POST', 'GET'])
 def options(var):
-    """
-    The route which allows users to pick which link they would like to download
+    """The route for picking download links
     """
     if request.method == 'POST':
         url = request.form['url']
@@ -112,9 +109,7 @@ def options(var):
 
 @app.route('/<string:var>/table', methods=['POST', 'GET'])
 def table(var):
-    """
-    The route for the options page, which allows users to specify data and time columns
-    Needs to be updated to allow title, x, and y axis labels to be input - a project from some jquery/js/node.js
+    """The route which allows users to specify options
     """
     if request.method == 'POST':
         dlname = request.form['dlink']
@@ -127,8 +122,7 @@ def table(var):
 
 @app.route('/<string:var>/plot', methods=['POST', 'GET'])
 def plot_from_df(var):
-    """
-    The route which links to /table - the final graph you get when the entire process is completed
+    """The route to the final plot generated
     """
     error = 'Sorry, an error has occured, and were not sure what is is (>T-T<)'
     if request.method == 'POST':

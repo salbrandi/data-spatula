@@ -11,10 +11,10 @@ htmlparser.compare(): this function is used to compare some data frame with a da
                       of the relevant president or party in office at the time.
 """
 
-'''\/ Local Imports \/'''
+# \/ Local Imports \/
 from .tablereader import get_fe
 
-''' \/ Third-Party Imports \/ '''
+# \/ Third-Party Imports \/
 from bokeh import plotting
 import bokeh.palettes as palettes
 from bokeh.embed import components
@@ -32,7 +32,7 @@ logging.basicConfig(filename='webservice.log', level=logging.DEBUG )  # set up t
 
 
 def prlog(msg, log=True, prnt=False, level='ERROR'):
-    """
+    """logging/printing function
     :type log: bool
     :param msg: msg to print/log
     :param log: if the function should log the msg or not
@@ -50,8 +50,7 @@ def prlog(msg, log=True, prnt=False, level='ERROR'):
 
 
 def download_approved(ext, filep):
-    """
-    A function that returns true if the file extension is correct AND the file is readable
+    """checks if the file extension is correct AND the file is readable
     :param ext: the expected file extension of the file
     :param filep: the filepath of the file
     :return: True if approved, False if not
@@ -79,19 +78,16 @@ def download_approved(ext, filep):
         return False
 
 
-
 def previous_element(_list, index):
     """
-    A function which defines the previous elemenet in a list - makes the code more readable
+    Defines the previous element in a list
     """
     return _list[index-1]
 
 
-
 def find_download_links(url, filetype, output_name, in_number=0, download=False, clobber=True):
 
-    """
-    # A function which looks around webpages for html tables and .csv/.tsv download links and downloads them.
+    """looks around webpages for download links
     :param url: url to be scraped
     :param filetype: filetype to look for in the scraped url
     :param output_name: name of the file to be downloaded
@@ -163,14 +159,12 @@ def find_download_links(url, filetype, output_name, in_number=0, download=False,
 
 
 def file_to_htmltable(filepath, delim=','):
-    """
-    simple function to take a file from a file path and generate an html table
+    """read a file and generate an html table
     :return: html table script as 'htmltable' variable
     """
     dataframe = pd.read_table(filepath, delim, header=0, engine='python')
     htmltable = dataframe.to_html(bold_rows=True, escape=True)
     return htmltable
-
 
 
 def compare(df1, col, title, x_lb, y_lb,
@@ -180,8 +174,7 @@ def compare(df1, col, title, x_lb, y_lb,
             render=True,
             urlth='patella'
             ):
-    """
-    A function that takes a dataframe for input and compares it to the change by year as a political party held power
+    """compares a dataframe to the changes in political parties
     :param df1: the first data frame to be compared.
     :param fedf: the second dataframe to be compared, always fe_list.
     :param col: the data column of the first data frame which holds the dates needed to be compared.
@@ -268,7 +261,7 @@ def compare(df1, col, title, x_lb, y_lb,
     plotframe.set_index('Years', drop=True, inplace=True)  # remove the year column and set as index
     grouped = plotframe.groupby('First Executive')
 
-    # ''' Bokeh Plot ''' ''' -- soon to be converted to Plotly Javascript --
+    # Bokeh Plot
     p = plotting.figure(title=title,
                x_axis_label=x_lb,
                y_axis_label='Percent Change in ' + y_lb,
@@ -289,7 +282,6 @@ def compare(df1, col, title, x_lb, y_lb,
                )
     p.background_fill_color = "LightGrey"
     script, div = components(p)  # split the graph into JSON/JS components script and div
-    # '''            ''' ''' -- soon to be converted to Plotly Javascript --
 
     # convert the datframe to html for easy display
     df_htmltable = plotframe.to_html(bold_rows=True, escape=True, classes='dftable')

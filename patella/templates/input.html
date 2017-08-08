@@ -21,13 +21,20 @@
               {% endif %}
             </div>
 
-            <div id="formdiv" title="Enter your data!">
-            <form action="/{{ var }}/options" method="POST" style="display:inline-block;margin:50px;">
+            <div id="formdiv" title="Enter your data!" style="display:inline-block;padding:50px;">
+            <form action="/{{ var }}/options" method="POST">
                 <p>Data Scrape URL<br>   <input title="url" type="text" name="url" value=""/></p>
                 <p>Filetype (.csv, .tsv)<br>   <input title="filetype" type="text" name="filetype" value=".csv"/></p>
                 <p><input type="submit" name="action" value="Scrape URL for Data" /></p>
             </form>
-          </div>
+            </div>
+                <h4>Some Good Example URLs</h4>
+                <ul>
+                    <li>Unemployment - https://raw.github.com/datasets/us-employment-bls/master/data/aat1.csv</li>
+                    <li>Assorted - https://vincentarelbundock.github.io/Rdatasets/datasets.html</li>
+                </ul>
+
+
         </div>
         <div class="footer"><a href="/index"> Go back </a></div>
 </body>

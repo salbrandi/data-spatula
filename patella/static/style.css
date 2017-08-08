@@ -1,9 +1,14 @@
 /* stylesheet */
 .dftable {
-  position: absolute;
+  position: relative;
   left: 750px;
   margin: 50px;
   display:inline-block
+}
+
+.inline {
+    position: relative;
+    display:inline-block
 }
 
 body {
@@ -37,9 +42,9 @@ a:active {
     color: #ce8483;
 }
 
-li {
+/*li {
     display:inline
-}
+}*/
 
 #navbar{
     text-align:left;
