@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='patella',
     packages=find_packages(),
-    version='0.1.11',
+version='0.1.12',
     author='Salvador Brandi',
     author_email='salbrandi@gmail.com',
     url='https://github.com/salbrandi/patella',
@@ -17,6 +17,14 @@ setup(
     py_modules=['htmlparser'],
     description='A webservice for scraping files and plotting data against presidential party variation',
     long_description=long_description,
+    install_requires = ['Click',
+                        'bokeh',
+                        'flask',
+                        'bs4',
+                        'pandas',
+                        'matplotlib',
+                        'html5lib',
+                        'dateparser'],
     entry_points='''
         [console_scripts]
         patella=patella.click_commands:patella
