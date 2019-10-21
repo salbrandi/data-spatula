@@ -34,4 +34,4 @@ tornado==4.5.1            # via bokeh
 tzlocal==1.4              # via dateparser
 urllib3==1.22             # via requests
 webencodings==0.5.1       # via html5lib
-werkzeug==0.12.2          # via flask
+werkzeug==0.15.3          # via flask
