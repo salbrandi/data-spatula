@@ -4,34 +4,101 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-beautifulsoup4==4.6.0     # via bs4
-bkcharts==0.2             # via bokeh
+backports-abc==0.5
+    # via tornado
+beautifulsoup4==4.6.0
+    # via bs4
+bkcharts==0.2
+    # via bokeh
 bokeh==0.12.6
+    # via -r requirements.in
 bs4==0.0.1
-certifi==2017.4.17        # via requests
-chardet==3.0.4            # via requests
+    # via -r requirements.in
+certifi==2017.4.17
+    # via
+    #   requests
+    #   tornado
+chardet==3.0.4
+    # via requests
 click==6.7
-cycler==0.10.0            # via matplotlib
+    # via
+    #   -r requirements.in
+    #   flask
+cycler==0.10.0
+    # via matplotlib
 dateparser==0.6.0
+    # via -r requirements.in
 flask==0.12.2
+    # via -r requirements.in
+functools32==3.2.3.post2
+    # via matplotlib
+futures==3.3.0
+    # via bokeh
 html5lib==0.999999999
-idna==2.5                 # via requests
-itsdangerous==0.24        # via flask
-jinja2==2.9.6             # via bokeh, flask
-markupsafe==1.0           # via jinja2
+    # via -r requirements.in
+idna==2.5
+    # via requests
+itsdangerous==0.24
+    # via flask
+jinja2==2.9.6
+    # via
+    #   bokeh
+    #   flask
+markupsafe==1.0
+    # via jinja2
 matplotlib==2.0.2
-numpy==1.13.1             # via bkcharts, bokeh, matplotlib, pandas
+    # via -r requirements.in
+numpy==1.13.1
+    # via
+    #   bkcharts
+    #   bokeh
+    #   matplotlib
+    #   pandas
 pandas==0.20.3
-pyparsing==2.2.0          # via matplotlib
-python-dateutil==2.6.1    # via bokeh, dateparser, matplotlib, pandas
-pytz==2017.2              # via dateparser, matplotlib, pandas, tzlocal
-pyyaml==3.12              # via bokeh
-regex==2017.7.28          # via dateparser
-requests==2.18.2          # via bokeh
-ruamel.yaml==0.15.23      # via dateparser
-six==1.10.0               # via bkcharts, bokeh, cycler, html5lib, matplotlib, python-dateutil
-tornado==4.5.1            # via bokeh
-tzlocal==1.4              # via dateparser
-urllib3==1.22             # via requests
-webencodings==0.5.1       # via html5lib
-werkzeug==0.12.2          # via flask
+    # via -r requirements.in
+pyparsing==2.2.0
+    # via matplotlib
+python-dateutil==2.6.1
+    # via
+    #   bokeh
+    #   dateparser
+    #   matplotlib
+    #   pandas
+pytz==2017.2
+    # via
+    #   dateparser
+    #   matplotlib
+    #   pandas
+    #   tzlocal
+pyyaml==5.4
+    # via bokeh
+regex==2017.7.28
+    # via dateparser
+requests==2.18.2
+    # via bokeh
+ruamel.ordereddict==0.4.15
+    # via ruamel.yaml
+ruamel.yaml==0.15.23
+    # via dateparser
+singledispatch==3.6.1
+    # via tornado
+six==1.10.0
+    # via
+    #   bkcharts
+    #   bokeh
+    #   cycler
+    #   html5lib
+    #   matplotlib
+    #   python-dateutil
+subprocess32==3.5.4
+    # via matplotlib
+tornado==4.5.1
+    # via bokeh
+tzlocal==1.4
+    # via dateparser
+urllib3==1.22
+    # via requests
+webencodings==0.5.1
+    # via html5lib
+werkzeug==0.12.2
+    # via flask
